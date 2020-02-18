@@ -2,9 +2,9 @@
 [] 1. Heater T0 data never shows up next to red/white tick
 [x]2. The graphs are shit and a waste of time in my view and should go altogether
 [x]3. The third column contents can go altogether- we don’t need to be able to extrude/reverse as we have screen on printer for that- however, enable second extruder check box we need to keep for switching between dual and single extruder printers
-[]4. I would have it auto check temperatures every 3 seconds by default and get rid of the check box options for that
+[x]4. I would have it auto check temperatures every 3 seconds by default and get rid of the check box options for that
 	i would need to look into this, angular gets the info from 
-[]5. Get rid of the speed and motors off boxes and buttons
+[x]5. Get rid of the speed and motors off boxes and buttons
 []6. Change “controls” label to “Movement Controls”
 []7. Change Middle column heading to “Temperature Control”
 []8. Change middle column sub headings to “Name Off Temp Set Value/Target”
