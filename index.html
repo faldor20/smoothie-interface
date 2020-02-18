@@ -611,7 +611,7 @@ Build date: 2016-06-28
 		<!-- navbar -->
 		<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom:0"
 			data-ng-controller="HeaderCtrl as headerVM">
-			<div class="navbar-header"><a class="navbar-brand" href="index.html">Smoothieware webUI - </a><a
+			<div class="navbar-header"><a class="navbar-brand" href="index.html">Workshop 3DP webUI - </a><a
 					class="navbar-brand" editable-text="headerVM.printerName" onaftersave="headerVM.updatePrinterName()"
 					data-ng-bind="headerVM.printerName"></a></div>
 			<ul class="nav navbar-top-links navbar-right">
@@ -979,6 +979,13 @@ Build date: 2016-06-28
 									</tr>
 								</tbody>
 							</table>
+							<div class="panel-footer">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="pull-left" translate>Preheat 10°C above print temperatures</div>
+									</div>
+								</div>
+							</div>
 							<!-- This is the code for the graphs -->
 							<!-- <div class="row">
 								<div class="col-lg-6"><canvas id="heaterTempBar" height="140" class="chart chart-line"
