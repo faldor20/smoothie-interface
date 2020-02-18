@@ -505,10 +505,8 @@
 		 * @return {undefined}
 		 */
 		function activate() {
-			if (vm.autoCheckEnabled) {
-				vm.localTempInterval = $interval(vm.onTimeout, 1E3 * vm.tempInterval);
-				vm.getTemperatures();
-			}
+			vm.localTempInterval = $interval(vm.onTimeout, 1E3 * 3);
+			vm.getTemperatures();
 		}
 		/**
 		 * @return {undefined}
