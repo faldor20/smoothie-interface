@@ -1116,760 +1116,1384 @@ Build date: 2016-06-28
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>
 </body>
 <script>
-	! function () {
-		"use strict";
-
-		function e(e, t) {
-			e.setPrefix("smoothieApp"), t.setOptions({
+	'use strict';
+	!function () {
+		/**
+		 * @param {?} localStorageServiceProvider
+		 * @param {!Object} ChartJsProvider
+		 * @return {undefined}
+		 */
+		function ConfigBlock(localStorageServiceProvider, ChartJsProvider) {
+			localStorageServiceProvider.setPrefix("smoothieApp");
+			ChartJsProvider.setOptions({
 				colours: ["#FDB45C", "#DCDCDC", "#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-				responsive: !0,
-				maintainAspectRatio: !1
-			})
+				responsive: true,
+				maintainAspectRatio: false
+			});
 		}
-
-		function t(e, t, r, n) {
-			e.setCurrentLanguage(t.get("currentLanguage") || "en"), e.debug = !0, r.theme = "bs3", r.activate = "select"
+		/**
+		 * @param {!Object} gettextCatalog
+		 * @param {!Object} localStorageService
+		 * @param {!Object} editableOptions
+		 * @param {?} $httpBackend
+		 * @return {undefined}
+		 */
+		function RunBlock(gettextCatalog, localStorageService, editableOptions, $httpBackend) {
+			gettextCatalog.setCurrentLanguage(localStorageService.get("currentLanguage") || "en");
+			/** @type {boolean} */
+			gettextCatalog.debug = true;
+			/** @type {string} */
+			editableOptions.theme = "bs3";
+			/** @type {string} */
+			editableOptions.activate = "select";
 		}
-		angular.module("smoothieApp", ["ui.bootstrap", "gettext", "ngSanitize", "luegg.directives", "xeditable", "LocalStorageModule", "ngFileUpload", "chart.js"]).config(e).run(t), t.$inject = ["gettextCatalog", "localStorageService", "editableOptions", "$httpBackend"], e.$inject = ["localStorageServiceProvider", "ChartJsProvider"]
-	}(), angular.module("gettext").run(["gettextCatalog", function (e) {
-		e.setStrings("de", {
+		angular.module("smoothieApp", ["ui.bootstrap", "gettext", "ngSanitize", "luegg.directives", "xeditable", "LocalStorageModule", "ngFileUpload", "chart.js"]).config(ConfigBlock).run(RunBlock);
+		/** @type {!Array} */
+		RunBlock.$inject = ["gettextCatalog", "localStorageService", "editableOptions", "$httpBackend"];
+		/** @type {!Array} */
+		ConfigBlock.$inject = ["localStorageServiceProvider", "ChartJsProvider"];
+	}(), angular.module("gettext").run(["gettextCatalog", function (gettextCatalog) {
+		gettextCatalog.setStrings("de", {
 			"Language:": "Sprache:"
-		}), e.setStrings("pl", {
+		});
+		gettextCatalog.setStrings("pl", {
 			Abort: "Przerwij",
 			"auto-check every:": "sprawdzaj co:",
 			Autoscroll: "Autoscroll",
-			Bed: "Stół",
-			Clear: "Wyczyść",
+			Bed: "St\u00f3\u0142",
+			Clear: "Wyczy\u015b\u0107",
 			Commands: "Komendy",
 			Controls: "Sterowanie",
-			Delete: "Usuń",
-			"enable second extruder": "włącz drugi ekstruder",
-			Extrude: "Wytłaczaj",
+			Delete: "Usu\u0144",
+			"enable second extruder": "w\u0142\u0105cz drugi ekstruder",
+			Extrude: "Wyt\u0142aczaj",
 			"Extruder T0": "Ekstruder T0",
 			"Extruder T1": "Ekstruder T1",
 			Extruders: "Ekstrudery",
 			Files: "Pliki",
 			"Filter temperatures": "Filtruj temperatury",
-			"Get temperature": "Sprawdź temperatury",
-			"Heater T0": "Głowica T0",
-			"Heater T1": "Głowica T1",
-			"Language:": "Język:",
-			"Motors off": "Wyłącz",
+			"Get temperature": "Sprawd\u017a temperatury",
+			"Heater T0": "G\u0142owica T0",
+			"Heater T1": "G\u0142owica T1",
+			"Language:": "J\u0119zyk:",
+			"Motors off": "Wy\u0142\u0105cz",
 			Name: "Nazwa",
 			Options: "Opcje",
 			Print: "Drukuj",
-			Progress: "Postęp",
-			Refresh: "Odśwież",
+			Progress: "Post\u0119p",
+			Refresh: "Od\u015bwie\u017c",
 			Reverse: "Cofnij",
 			sec: "sek",
-			Send: "Wyślij",
-			"Send Command...": "Wyślij polecenie",
+			Send: "Wy\u015blij",
+			"Send Command...": "Wy\u015blij polecenie",
 			Settings: "Ustawienia",
-			"Speed:": "Prędkość:",
+			"Speed:": "Pr\u0119dko\u015b\u0107:",
 			Temperatures: "Temperatury",
 			Upload: "Wczytaj",
 			"Value | Target": "Pomiar | Cel"
-		})
-	}]),
-		function () {
-			"use strict";
-
-			function e(e, t) {
-				function r() {
-					t.registerOutput(u)
-				}
-
-				function n() {
-					u.command && (console.log("Command: " + u.command), t.runCommand(u.command).then(function (e) {
-						u.updateOutput(e), u.cmdHistory.push(u.command), u.cmdHistory.slice(-300), u.cmdHistoryIdx = u.cmdHistory.length, u.command = ""
-					}))
-				}
-
-				function o(e) {
-					var t = e.keyCode;
-					return 38 != t && 40 != t || (38 == t && u.cmdHistory.length > 0 && u.cmdHistoryIdx > 0 ? u.cmdHistoryIdx-- : 40 == t && u.cmdHistoryIdx < u.cmdHistory.length - 1 && u.cmdHistoryIdx++ , u.cmdHistoryIdx >= 0 && u.cmdHistoryIdx < u.cmdHistory.length && (u.command = u.cmdHistory[u.cmdHistoryIdx]), !1)
-				}
-
-				function a(e) {
-					return 13 == e.keyCode && u.sendCommand(), !0
-				}
-
-				function c() {
-					u.log = [], u.updateOutput()
-				}
-
-				function l() {
-					u.updateOutput()
-				}
-
-				function i(e) {
-					u.log || (u.log = []), e && (u.log = u.log.concat(e), u.log = u.log.slice(-300));
-					for (var t = /ok T:/g, r = "", n = u.log.length, o = 0; o < n; o++) u.filterOutput && u.log[o].match(t) || (r += u.log[o]);
-					u.commandOutput = r
-				}
-				var u = this;
-				u.log = [], u.command = "", u.commandOutput = "", u.cmdHistory = [], u.cmdHistoryIdx = -1, u.autoscrollEnabled = !0, u.filterOutput = !1, u.sendCommand = n, u.handleKeyDown = o, u.handleKeyUp = a, u.clear = c, u.onFilterChange = l, u.updateOutput = i, r()
+		});
+	}]), function () {
+		/**
+		 * @param {?} $scope
+		 * @param {?} DataService
+		 * @return {undefined}
+		 */
+		function CommandCtrl($scope, DataService) {
+			/**
+			 * @return {undefined}
+			 */
+			function activate() {
+				DataService.registerOutput(vm);
 			}
-			angular.module("smoothieApp").controller("CommandCtrl", e), e.$inject = ["$scope", "DataService"]
-		}(),
-		function () {
-			"use strict";
-
-			function e(e) {
-				function t() {
-					e.updateSecondExtruder()
+			/**
+			 * @return {undefined}
+			 */
+			function sendCommand() {
+				if (vm.command) {
+					console.log("Command: " + vm.command);
+					DataService.runCommand(vm.command).then(function (result_data) {
+						vm.updateOutput(result_data);
+						vm.cmdHistory.push(vm.command);
+						vm.cmdHistory.slice(-300);
+						vm.cmdHistoryIdx = vm.cmdHistory.length;
+						/** @type {string} */
+						vm.command = "";
+					});
 				}
-
-				function r(t, r) {
-					console.log("Extruder: " + t + " | length: " + n.filamenLength + " | speed: " + n.velocity), e.runCommand(t).then(function (e) {
-						console.log("Extruder result: " + e)
-					}), e.runCommand("G91 G0 E" + n.filamenLength * r + " F" + n.velocity + " G90").then(function (e) {
-						console.log("Command result: " + e)
-					})
-				}
-				var n = this;
-				n.secondExtruder = e.secondExtruderState(), n.filamenLength = 5, n.velocity = 100, n.onSecondExtruderSupportChange = t, n.extrude = r
 			}
-			angular.module("smoothieApp").controller("ExtruderCtrl", e), e.$inject = ["DataService"]
-		}(),
-		function () {
-			"use strict";
-
-			function e(e, t) {
-				function r() {
-					n()
+			/**
+			 * @param {!Event} params
+			 * @return {?}
+			 */
+			function handleKeyDown(params) {
+				var c = params.keyCode;
+				return 38 != c && 40 != c || (38 == c && vm.cmdHistory.length > 0 && vm.cmdHistoryIdx > 0 ? vm.cmdHistoryIdx-- : 40 == c && vm.cmdHistoryIdx < vm.cmdHistory.length - 1 && vm.cmdHistoryIdx++ , vm.cmdHistoryIdx >= 0 && vm.cmdHistoryIdx < vm.cmdHistory.length && (vm.command = vm.cmdHistory[vm.cmdHistoryIdx]), false);
+			}
+			/**
+			 * @param {!Event} event
+			 * @return {?}
+			 */
+			function handleKeyUp(event) {
+				return 13 == event.keyCode && vm.sendCommand(), true;
+			}
+			/**
+			 * @return {undefined}
+			 */
+			function clear() {
+				/** @type {!Array} */
+				vm.log = [];
+				vm.updateOutput();
+			}
+			/**
+			 * @return {undefined}
+			 */
+			function onFilterChange() {
+				vm.updateOutput();
+			}
+			/**
+			 * @param {string} message
+			 * @return {undefined}
+			 */
+			function updateOutput(message) {
+				if (!vm.log) {
+					/** @type {!Array} */
+					vm.log = [];
 				}
-
-				function n() {
-					console.log("RefreshFiles"), e.runCommand("M20").then(function (e) {
-						o(e)
-					}, function (e) {
-						console.error(e.statusText)
-					})
+				if (message) {
+					vm.log = vm.log.concat(message);
+					vm.log = vm.log.slice(-300);
 				}
-
-				function o(e) {
-					s.fileList = [];
-					var t = e.split("\n");
-					angular.forEach(t, function (e, t) {
-						if (e = e.trim(), e.match(/\.g(code)?$/)) {
-							var r = {
-								filename: e,
-								uploading: !1,
-								percentage: 0
-							};
-							s.fileList.push(r)
-						}
-					})
+				/** @type {!RegExp} */
+				var regex = /ok T:/g;
+				/** @type {string} */
+				var output = "";
+				var patchLen = vm.log.length;
+				/** @type {number} */
+				var i = 0;
+				for (; i < patchLen; i++) {
+					if (!(vm.filterOutput && vm.log[i].match(regex))) {
+						output = output + vm.log[i];
+					}
 				}
-
-				function a(t) {
-					console.log("print file - " + t), e.runCommand("play /sd/" + t).then(function (e) {
-						console.log("Result: " + e)
-					})
-				}
-
-				function c() {
-					e.runCommand("progress").then(function (t) {
-						e.broadcastCommand(t)
-					}, function (e) {
-						console.error(e.statusText)
-					})
-				}
-
-				function l() {
-					e.runCommand("abort").then(function (t) {
-						e.broadcastCommand(t)
-					}, function (e) {
-						console.error(e.statusText)
-					})
-				}
-
-				function i(r) {
-					r && (e.broadcastCommand("Uploading: " + r.name + "\n"), s.currentUploadedFile = {
-						filename: r.name,
-						uploading: !0,
+				vm.commandOutput = output;
+			}
+			var vm = this;
+			/** @type {!Array} */
+			vm.log = [];
+			/** @type {string} */
+			vm.command = "";
+			/** @type {string} */
+			vm.commandOutput = "";
+			/** @type {!Array} */
+			vm.cmdHistory = [];
+			/** @type {number} */
+			vm.cmdHistoryIdx = -1;
+			/** @type {boolean} */
+			vm.autoscrollEnabled = true;
+			/** @type {boolean} */
+			vm.filterOutput = false;
+			/** @type {function(): undefined} */
+			vm.sendCommand = sendCommand;
+			/** @type {function(!Event): ?} */
+			vm.handleKeyDown = handleKeyDown;
+			/** @type {function(!Event): ?} */
+			vm.handleKeyUp = handleKeyUp;
+			/** @type {function(): undefined} */
+			vm.clear = clear;
+			/** @type {function(): undefined} */
+			vm.onFilterChange = onFilterChange;
+			/** @type {function(string): undefined} */
+			vm.updateOutput = updateOutput;
+			activate();
+		}
+		angular.module("smoothieApp").controller("CommandCtrl", CommandCtrl);
+		/** @type {!Array} */
+		CommandCtrl.$inject = ["$scope", "DataService"];
+	}(), function () {
+		/**
+		 * @param {?} DataService
+		 * @return {undefined}
+		 */
+		function ExtruderCtrl(DataService) {
+			/**
+			 * @return {undefined}
+			 */
+			function onSecondExtruderSupportChange() {
+				DataService.updateSecondExtruder();
+			}
+			/**
+			 * @param {string} extruder
+			 * @param {?} direction
+			 * @return {undefined}
+			 */
+			function extrude(extruder, direction) {
+				console.log("Extruder: " + extruder + " | length: " + vm.filamenLength + " | speed: " + vm.velocity);
+				DataService.runCommand(extruder).then(function (spofHosts) {
+					console.log("Extruder result: " + spofHosts);
+				});
+				DataService.runCommand("G91 G0 E" + vm.filamenLength * direction + " F" + vm.velocity + " G90").then(function (spofHosts) {
+					console.log("Command result: " + spofHosts);
+				});
+			}
+			var vm = this;
+			vm.secondExtruder = DataService.secondExtruderState();
+			/** @type {number} */
+			vm.filamenLength = 5;
+			/** @type {number} */
+			vm.velocity = 100;
+			/** @type {function(): undefined} */
+			vm.onSecondExtruderSupportChange = onSecondExtruderSupportChange;
+			/** @type {function(string, ?): undefined} */
+			vm.extrude = extrude;
+		}
+		angular.module("smoothieApp").controller("ExtruderCtrl", ExtruderCtrl);
+		/** @type {!Array} */
+		ExtruderCtrl.$inject = ["DataService"];
+	}(), function () {
+		/**
+		 * @param {?} DataService
+		 * @param {!Object} Upload
+		 * @return {undefined}
+		 */
+		function FileCtrl(DataService, Upload) {
+			/**
+			 * @return {undefined}
+			 */
+			function activate() {
+				refreshFiles();
+			}
+			/**
+			 * @return {undefined}
+			 */
+			function refreshFiles() {
+				console.log("RefreshFiles");
+				DataService.runCommand("M20").then(function (result_data) {
+					parseFilelist(result_data);
+				}, function (xhr) {
+					console.error(xhr.statusText);
+				});
+			}
+			/**
+			 * @param {string} rawdata
+			 * @return {undefined}
+			 */
+			function parseFilelist(rawdata) {
+				/** @type {!Array} */
+				vm.fileList = [];
+				var zakoni = rawdata.split("\n");
+				angular.forEach(zakoni, function (path, canCreateDiscussions) {
+					if (path = path.trim(), path.match(/\.g(code)?$/)) {
+						var file = {
+							filename: path,
+							uploading: false,
+							percentage: 0
+						};
+						vm.fileList.push(file);
+					}
+				});
+			}
+			/**
+			 * @param {string} file
+			 * @return {undefined}
+			 */
+			function print(file) {
+				console.log("print file - " + file);
+				DataService.runCommand("play /sd/" + file).then(function (spofHosts) {
+					console.log("Result: " + spofHosts);
+				});
+			}
+			/**
+			 * @return {undefined}
+			 */
+			function progress() {
+				DataService.runCommand("progress").then(function (result_data) {
+					DataService.broadcastCommand(result_data);
+				}, function (xhr) {
+					console.error(xhr.statusText);
+				});
+			}
+			/**
+			 * @return {undefined}
+			 */
+			function abort() {
+				DataService.runCommand("abort").then(function (result_data) {
+					DataService.broadcastCommand(result_data);
+				}, function (xhr) {
+					console.error(xhr.statusText);
+				});
+			}
+			/**
+			 * @param {!Object} file
+			 * @return {undefined}
+			 */
+			function uploadFile(file) {
+				if (file) {
+					DataService.broadcastCommand("Uploading: " + file.name + "\n");
+					vm.currentUploadedFile = {
+						filename: file.name,
+						uploading: true,
 						percentage: 0
-					}, s.fileList.push(s.currentUploadedFile), t.http({
+					};
+					vm.fileList.push(vm.currentUploadedFile);
+					Upload.http({
 						url: "/upload",
 						headers: {
-							"X-Filename": r.name
+							"X-Filename": file.name
 						},
-						data: r
-					}).then(function (t) {
-						e.broadcastCommand("Upload successful.\n"), s.currentUploadedFile.uploading = !1, s.refreshFiles()
-					}, function (t) {
-						e.broadcastCommand("Error status: " + t.status + "\n")
-					}, function (e) {
-						var t = parseInt(100 * e.loaded / e.total);
-						s.currentUploadedFile.percentage = t, console.log("Progress: " + t + "%")
-					}))
+						data: file
+					}).then(function (canCreateDiscussions) {
+						DataService.broadcastCommand("Upload successful.\n");
+						/** @type {boolean} */
+						vm.currentUploadedFile.uploading = false;
+						vm.refreshFiles();
+					}, function (testsStatus) {
+						DataService.broadcastCommand("Error status: " + testsStatus.status + "\n");
+					}, function (evt2) {
+						/** @type {number} */
+						var to = parseInt(100 * evt2.loaded / evt2.total);
+						/** @type {number} */
+						vm.currentUploadedFile.percentage = to;
+						console.log("Progress: " + to + "%");
+					});
 				}
-
-				function u(t) {
-					e.runCommand("M30 " + t.filename).then(function (r) {
-						e.broadcastCommand("Deleted file: " + t.filename + "\n"), s.refreshFiles()
-					}, function (e) {
-						console.error(e.statusText)
-					})
-				}
-				var s = this;
-				s.fileList = [], s.currentUploadedFile = {}, s.refreshFiles = n, s.print = a, s.progress = c, s.abort = l, s.uploadFile = i, s.deleteFile = u, r()
 			}
-			angular.module("smoothieApp").controller("FileCtrl", e), e.$inject = ["DataService", "Upload"]
-		}(),
-		function () {
-			"use strict";
-
-			function e(e, t) {
-				function r(r) {
-					o.languages.current = r, e.setCurrentLanguage(r), t.set("currentLanguage", o.languages.current)
-				}
-
-				function n() {
-					t.set("printerName", o.printerName)
-				}
-				var o = this;
-				o.printerName = t.get("printerName") || "Your printer name", o.languages = {
-					current: e.currentLanguage,
-					available: {
-						en: "English",
-						pl: "Polski"
-					}
-				}, o.setLanguage = r, o.updatePrinterName = n
+			/**
+			 * @param {!Node} event
+			 * @return {undefined}
+			 */
+			function deleteFile(event) {
+				DataService.runCommand("M30 " + event.filename).then(function (canCreateDiscussions) {
+					DataService.broadcastCommand("Deleted file: " + event.filename + "\n");
+					vm.refreshFiles();
+				}, function (xhr) {
+					console.error(xhr.statusText);
+				});
 			}
-			angular.module("smoothieApp").controller("HeaderCtrl", e), e.$inject = ["gettextCatalog", "localStorageService"]
-		}(),
-		function () {
-			"use strict";
-
-			function e(e) {
-				function t(e) {
-					console.log("Home axis: " + e)
-				}
-
-				function r() {
-					console.log("MotorsOff"), e.runCommand("M18").then(function (e) {
-						console.log("Motors turned off! - Result: " + e)
-					}, function (e) {
-						console.error(e.statusText)
-					})
-				}
-
-				function n(t) {
-					console.log("jogButtonClick - " + t), e.runCommand(t).then(function (e) {
-						console.log("Result: " + e)
-					}, function (e) {
-						console.error(e.statusText)
-					})
-				}
-
-				function o(t) {
-					console.log("jogXYClick - " + t), e.runCommand("G91 G0 " + t + " F" + c.xy_velocity + " G90").then(function (e) {
-						console.log("Result: " + e)
-					}, function (e) {
-						console.error(e.statusText)
-					})
-				}
-
-				function a(t) {
-					console.log("jogZClick - " + t), e.runCommand("G91 G0 " + t + " F" + c.z_velocity + " G90").then(function (e) {
-						console.log("Result: " + e)
-					}, function (e) {
-						console.error(e.statusText)
-					})
-				}
-				var c = this;
-				c.elementId = "", c.xy_velocity = 3e3, c.z_velocity = 200, c.homeAxis = t, c.motorsOff = r, c.jogButtonClick = n, c.jogXYClick = o, c.jogZClick = a
+			var vm = this;
+			/** @type {!Array} */
+			vm.fileList = [];
+			vm.currentUploadedFile = {};
+			/** @type {function(): undefined} */
+			vm.refreshFiles = refreshFiles;
+			/** @type {function(string): undefined} */
+			vm.print = print;
+			/** @type {function(): undefined} */
+			vm.progress = progress;
+			/** @type {function(): undefined} */
+			vm.abort = abort;
+			/** @type {function(!Object): undefined} */
+			vm.uploadFile = uploadFile;
+			/** @type {function(!Node): undefined} */
+			vm.deleteFile = deleteFile;
+			activate();
+		}
+		angular.module("smoothieApp").controller("FileCtrl", FileCtrl);
+		/** @type {!Array} */
+		FileCtrl.$inject = ["DataService", "Upload"];
+	}(), function () {
+		/**
+		 * @param {?} gettextCatalog
+		 * @param {!Object} localStorageService
+		 * @return {undefined}
+		 */
+		function HeaderCtrl(gettextCatalog, localStorageService) {
+			/**
+			 * @param {string} lang
+			 * @return {undefined}
+			 */
+			function setLanguage(lang) {
+				/** @type {string} */
+				vm.languages.current = lang;
+				gettextCatalog.setCurrentLanguage(lang);
+				localStorageService.set("currentLanguage", vm.languages.current);
 			}
-			angular.module("smoothieApp").controller("MotorCtrl", e), e.$inject = ["DataService"]
-		}(),
-		function () {
-			"use strict";
-
-			function e(e, t, r) {
-				function n() {
-					d.autoCheckEnabled && (d.localTempInterval = e(d.onTimeout, 1e3 * d.tempInterval), d.getTemperatures())
+			/**
+			 * @return {undefined}
+			 */
+			function updatePrinterName() {
+				localStorageService.set("printerName", vm.printerName);
+			}
+			var vm = this;
+			vm.printerName = localStorageService.get("printerName") || "Your printer name";
+			vm.languages = {
+				current: gettextCatalog.currentLanguage,
+				available: {
+					en: "English",
+					pl: "Polski"
 				}
-
-				function o() {
-					d.getTemperatures()
+			};
+			/** @type {function(string): undefined} */
+			vm.setLanguage = setLanguage;
+			/** @type {function(): undefined} */
+			vm.updatePrinterName = updatePrinterName;
+		}
+		angular.module("smoothieApp").controller("HeaderCtrl", HeaderCtrl);
+		/** @type {!Array} */
+		HeaderCtrl.$inject = ["gettextCatalog", "localStorageService"];
+	}(), function () {
+		/**
+		 * @param {?} DataService
+		 * @return {undefined}
+		 */
+		function MotorCtrl(DataService) {
+			/**
+			 * @param {string} axis
+			 * @return {undefined}
+			 */
+			function homeAxis(axis) {
+				console.log("Home axis: " + axis);
+			}
+			/**
+			 * @return {undefined}
+			 */
+			function motorsOff() {
+				console.log("MotorsOff");
+				DataService.runCommand("M18").then(function (spofHosts) {
+					console.log("Motors turned off! - Result: " + spofHosts);
+				}, function (xhr) {
+					console.error(xhr.statusText);
+				});
+			}
+			/**
+			 * @param {string} cmd
+			 * @return {undefined}
+			 */
+			function jogButtonClick(cmd) {
+				console.log("jogButtonClick - " + cmd);
+				DataService.runCommand(cmd).then(function (spofHosts) {
+					console.log("Result: " + spofHosts);
+				}, function (xhr) {
+					console.error(xhr.statusText);
+				});
+			}
+			/**
+			 * @param {string} cmd
+			 * @return {undefined}
+			 */
+			function jogXYClick(cmd) {
+				console.log("jogXYClick - " + cmd);
+				DataService.runCommand("G91 G0 " + cmd + " F" + vm.xy_velocity + " G90").then(function (spofHosts) {
+					console.log("Result: " + spofHosts);
+				}, function (xhr) {
+					console.error(xhr.statusText);
+				});
+			}
+			/**
+			 * @param {string} cmd
+			 * @return {undefined}
+			 */
+			function jogZClick(cmd) {
+				console.log("jogZClick - " + cmd);
+				DataService.runCommand("G91 G0 " + cmd + " F" + vm.z_velocity + " G90").then(function (spofHosts) {
+					console.log("Result: " + spofHosts);
+				}, function (xhr) {
+					console.error(xhr.statusText);
+				});
+			}
+			var vm = this;
+			/** @type {string} */
+			vm.elementId = "";
+			/** @type {number} */
+			vm.xy_velocity = 3E3;
+			/** @type {number} */
+			vm.z_velocity = 200;
+			/** @type {function(string): undefined} */
+			vm.homeAxis = homeAxis;
+			/** @type {function(): undefined} */
+			vm.motorsOff = motorsOff;
+			/** @type {function(string): undefined} */
+			vm.jogButtonClick = jogButtonClick;
+			/** @type {function(string): undefined} */
+			vm.jogXYClick = jogXYClick;
+			/** @type {function(string): undefined} */
+			vm.jogZClick = jogZClick;
+		}
+		angular.module("smoothieApp").controller("MotorCtrl", MotorCtrl);
+		/** @type {!Array} */
+		MotorCtrl.$inject = ["DataService"];
+	}(), function () {
+		/**
+		 * @param {!Object} $interval
+		 * @param {?} DataService
+		 * @param {!Object} localStorageService
+		 * @return {undefined}
+		 */
+		function TempCtrl($interval, DataService, localStorageService) {
+			/**
+			 * @return {undefined}
+			 */
+			function activate() {
+				vm.localTempInterval = $interval(vm.onTimeout, 1E3 * 3);
+				vm.getTemperatures();
+			}
+			/**
+			 * @return {undefined}
+			 */
+			function onTimeout() {
+				vm.getTemperatures();
+			}
+			/**
+			 * @param {string} url
+			 * @return {undefined}
+			 */
+			function heatOff(url) {
+				switch (console.log("HeatOff - heater: " + url), url) {
+					case "T0":
+						/** @type {number} */
+						vm.heaterT0SelectedTemp = 0;
+						break;
+					case "T1":
+						/** @type {number} */
+						vm.heaterT1SelectedTemp = 0;
+						break;
+					case "bed":
+						/** @type {number} */
+						vm.bedSelectedTemp = 0;
 				}
-
-				function a(e) {
-					switch (console.log("HeatOff - heater: " + e), e) {
-						case "T0":
-							d.heaterT0SelectedTemp = 0;
-							break;
-						case "T1":
-							d.heaterT1SelectedTemp = 0;
-							break;
-						case "bed":
-							d.bedSelectedTemp = 0
+				/** @type {boolean} */
+				var closeExpr = "bed" != url;
+				/** @type {number} */
+				var closingExpr = closeExpr ? 104 : 140;
+				/** @type {string} */
+				var cmd = "M" + closingExpr + " S0";
+				if (closeExpr) {
+					/** @type {string} */
+					cmd = cmd + (" " + url);
+				}
+				DataService.runCommand(cmd).then(function (canCreateDiscussions) {
+					vm.getTemperatures();
+				});
+			}
+			/**
+			 * @param {string} heater
+			 * @return {undefined}
+			 */
+			function heatSet(heater) {
+				console.log("HeatSet - heater: " + heater);
+				/** @type {number} */
+				var selectedTemp = 0;
+				switch (heater) {
+					case "T0":
+						selectedTemp = vm.heaterT0SelectedTemp;
+						break;
+					case "T1":
+						selectedTemp = vm.heaterT1SelectedTemp;
+						break;
+					case "bed":
+						selectedTemp = vm.bedSelectedTemp;
+				}
+				console.log("Temp: " + selectedTemp);
+				/** @type {boolean} */
+				var point = "bed" != heater;
+				/** @type {number} */
+				var x = point ? 104 : 140;
+				/** @type {string} */
+				var command = "M" + x + " S" + selectedTemp;
+				if (point) {
+					/** @type {string} */
+					command = command + (" " + heater);
+				}
+				DataService.runCommand(command).then(function (canCreateDiscussions) {
+					vm.getTemperatures();
+				});
+			}
+			/**
+			 * @param {!Event} keyEvent
+			 * @param {string} heater
+			 * @return {?}
+			 */
+			function handleKeyUp(keyEvent, heater) {
+				return 13 == keyEvent.keyCode && vm.heatSet(heater), true;
+			}
+			/**
+			 * @return {undefined}
+			 */
+			function onAutoCheckChange() {
+				//if (vm.autoCheckEnabled) {
+				vm.localTempInterval = $interval(vm.onTimeout, 1E3 * 3);
+				localStorageService.set("autoCheckEnabled", "true");
+				vm.getTemperatures();
+				/* } else {
+					if (angular.isDefined(vm.localTempInterval)) {
+						$interval.cancel(vm.localTempInterval);
 					}
-					var r = "bed" != e,
-						n = r ? 104 : 140,
-						o = "M" + n + " S0";
-					r && (o += " " + e), t.runCommand(o).then(function (e) {
-						d.getTemperatures()
-					})
+					localStorageService.set("autoCheckEnabled", "false");
+				} */
+			}
+			/**
+			 * @return {undefined}
+			 */
+			function onTempIntervalChange() {
+				localStorageService.set("tempInterval", 3);
+				if (angular.isDefined(vm.localTempInterval)) {
+					$interval.cancel(vm.localTempInterval);
 				}
-
-				function c(e) {
-					console.log("HeatSet - heater: " + e);
-					var r = 0;
-					switch (e) {
-						case "T0":
-							r = d.heaterT0SelectedTemp;
-							break;
-						case "T1":
-							r = d.heaterT1SelectedTemp;
-							break;
-						case "bed":
-							r = d.bedSelectedTemp
-					}
-					console.log("Temp: " + r);
-					var n = "bed" != e,
-						o = n ? 104 : 140,
-						a = "M" + o + " S" + r;
-					n && (a += " " + e), t.runCommand(a).then(function (e) {
-						d.getTemperatures()
-					})
-				}
-
-				function l(e, t) {
-					return 13 == e.keyCode && d.heatSet(t), !0
-				}
-
-				function i() {
-					d.autoCheckEnabled ? (d.localTempInterval = e(d.onTimeout, 1e3 * d.tempInterval), r.set("autoCheckEnabled", "true"), d.getTemperatures()) : (angular.isDefined(d.localTempInterval) && e.cancel(d.localTempInterval), r.set("autoCheckEnabled", "false"))
-				}
-
-				function u() {
-					r.set("tempInterval", d.tempInterval), angular.isDefined(d.localTempInterval) && e.cancel(d.localTempInterval), d.localTempInterval = e(d.onTimeout, 1e3 * d.tempInterval)
-				}
-
-				function s() {
-					t.runCommand("M105").then(function (e) {
-						t.broadcastCommand(e);
-						for (var r, n = /(B|T(\d*)):\s*([+]?[0-9]*\.?[0-9]+)? (\/)([+]?[0-9]*\.?[0-9]+)?/gi; null !== (r = n.exec(e));) {
-							var o = r[1],
-								a = r[3] + "°C";
-							a += " | " + r[5] + "°C", "T" == o ? (d.heaterT0ActualTemp = r[3], d.heaterT0DisplayTemp = a) : "T1" == o && (d.heaterT1ActualTemp = r[3], d.heaterT1DisplayTemp = a), "B" == o && (d.bedActualTemp = Number(r[3]), d.bedDisplayTemp = a)
-						}
-						for (d.labels.length && (d.labels = d.labels.slice(1), d.dataHeater[0] = d.dataHeater[0].slice(1), d.dataBed[0] = d.dataBed[0].slice(1)); d.labels.length < 20;) d.labels.push(""), d.dataHeater[0].push(d.heaterT0ActualTemp), d.dataBed[0].push(d.bedActualTemp)
-					}, function (e) {
-						console.error(e.statusText)
-					})
-				}
-				var d = this;
-				d.secondExtruder = t.secondExtruderState(), d.labels = [], d.seriesHeater = ["Heater T0"], d.dataHeater = [
-					[]
-				], d.heaterColours = [{
-					backgroundColor: "rgba(77, 83, 96, 0.2)",
-					borderColor: "rgba(77, 83, 96, 0.5)"
-				}], d.seriesBed = ["Bed"], d.dataBed = [
-					[]
-				], d.bedColours = [{
-					backgroundColor: "rgba(247, 70, 74, 0.2)",
-					borderColor: "rgba(247, 70, 74, 0.5)"
-				}], Chart.defaults.global.elements.point.radius = 0, Chart.defaults.global.legend.position = "bottom", Chart.defaults.global.animation.duration = 0, Chart.defaults.global.elements.line.borderWidth = 1, d.options = {
-					tooltips: {
-						enabled: !1
-					},
-					scales: {
-						xAxes: [{
-							gridLines: {
-								display: !1
+				vm.localTempInterval = $interval(vm.onTimeout, 1E3 * 3);
+			}
+			/**
+			 * @return {undefined}
+			 */
+			function getTemperatures() {
+				DataService.runCommand("M105").then(function (result_data) {
+					DataService.broadcastCommand(result_data);
+					var result;
+					/** @type {!RegExp} */
+					var regex_temp = /(B|T(\d*)):\s*([+]?[0-9]*\.?[0-9]+)? (\/)([+]?[0-9]*\.?[0-9]+)?/gi;
+					for (; null !== (result = regex_temp.exec(result_data));) {
+						/** @type {string} */
+						var type = result[1];
+						/** @type {string} */
+						var value = result[3] + "\u00b0C";
+						/** @type {string} */
+						value = value + (" | " + result[5] + "\u00b0C");
+						if ("T" == type) {
+							/** @type {string} */
+							vm.heaterT0ActualTemp = result[3];
+							/** @type {string} */
+							vm.heaterT0DisplayTemp = value;
+						} else {
+							if ("T1" == type) {
+								/** @type {string} */
+								vm.heaterT1ActualTemp = result[3];
+								/** @type {string} */
+								vm.heaterT1DisplayTemp = value;
 							}
-						}]
+						}
+						if ("B" == type) {
+							/** @type {number} */
+							vm.bedActualTemp = Number(result[3]);
+							/** @type {string} */
+							vm.bedDisplayTemp = value;
+						}
 					}
-				}, d.localTempInterval = {}, d.tempInterval = r.get("tempInterval") || 3, d.autoCheckEnabled = "true" == r.get("autoCheckEnabled"), d.heaterT0SelectedTemp = 220, d.heaterT0ActualTemp = "-", d.heaterT0DisplayTemp = "", d.heaterT1SelectedTemp = 220, d.heaterT1ActualTemp = "-", d.heaterT1DisplayTemp = "", d.bedSelectedTemp = 60, d.bedActualTemp = "-", d.bedDisplayTemp = "", d.onTimeout = o, d.heatOff = a, d.heatSet = c, d.handleKeyUp = l, d.onAutoCheckChange = i, d.onTempIntervalChange = u, d.getTemperatures = s, n()
+					if (vm.labels.length) {
+						vm.labels = vm.labels.slice(1);
+						vm.dataHeater[0] = vm.dataHeater[0].slice(1);
+						vm.dataBed[0] = vm.dataBed[0].slice(1);
+					}
+					for (; vm.labels.length < 20;) {
+						vm.labels.push("");
+						vm.dataHeater[0].push(vm.heaterT0ActualTemp);
+						vm.dataBed[0].push(vm.bedActualTemp);
+					}
+				}, function (xhr) {
+					console.error(xhr.statusText);
+				});
 			}
-			angular.module("smoothieApp").controller("TempCtrl", e), e.$inject = ["$interval", "DataService", "localStorageService"]
-		}(),
-		function () {
-			"use strict";
-
-			function e(e, t) {
-				function r(t) {
-					return t += "\n", e.post(l, t).then(function (e) {
-						return e.data
-					})
+			var vm = this;
+			vm.secondExtruder = DataService.secondExtruderState();
+			/** @type {!Array} */
+			vm.labels = [];
+			/** @type {!Array} */
+			vm.seriesHeater = ["Heater T0"];
+			/** @type {!Array} */
+			vm.dataHeater = [[]];
+			/** @type {!Array} */
+			vm.heaterColours = [{
+				backgroundColor: "rgba(77, 83, 96, 0.2)",
+				borderColor: "rgba(77, 83, 96, 0.5)"
+			}];
+			/** @type {!Array} */
+			vm.seriesBed = ["Bed"];
+			/** @type {!Array} */
+			vm.dataBed = [[]];
+			/** @type {!Array} */
+			vm.bedColours = [{
+				backgroundColor: "rgba(247, 70, 74, 0.2)",
+				borderColor: "rgba(247, 70, 74, 0.5)"
+			}];
+			/** @type {number} */
+			Chart.defaults.global.elements.point.radius = 0;
+			/** @type {string} */
+			Chart.defaults.global.legend.position = "bottom";
+			/** @type {number} */
+			Chart.defaults.global.animation.duration = 0;
+			/** @type {number} */
+			Chart.defaults.global.elements.line.borderWidth = 1;
+			vm.options = {
+				tooltips: {
+					enabled: false
+				},
+				scales: {
+					xAxes: [{
+						gridLines: {
+							display: false
+						}
+					}]
 				}
-
-				function n(e) {
-					u.push(e)
+			};
+			vm.localTempInterval = {};
+			vm.tempInterval = localStorageService.get("tempInterval") || 3;
+			/** @type {boolean} */
+			vm.autoCheckEnabled = "true" == localStorageService.get("autoCheckEnabled");
+			/** @type {number} */
+			vm.heaterT0SelectedTemp = 220;
+			/** @type {string} */
+			vm.heaterT0ActualTemp = "-";
+			/** @type {string} */
+			vm.heaterT0DisplayTemp = "";
+			/** @type {number} */
+			vm.heaterT1SelectedTemp = 220;
+			/** @type {string} */
+			vm.heaterT1ActualTemp = "-";
+			/** @type {string} */
+			vm.heaterT1DisplayTemp = "";
+			/** @type {number} */
+			vm.bedSelectedTemp = 60;
+			/** @type {string} */
+			vm.bedActualTemp = "-";
+			/** @type {string} */
+			vm.bedDisplayTemp = "";
+			/** @type {function(): undefined} */
+			vm.onTimeout = onTimeout;
+			/** @type {function(string): undefined} */
+			vm.heatOff = heatOff;
+			/** @type {function(string): undefined} */
+			vm.heatSet = heatSet;
+			/** @type {function(!Event, string): ?} */
+			vm.handleKeyUp = handleKeyUp;
+			/** @type {function(): undefined} */
+			vm.onAutoCheckChange = onAutoCheckChange;
+			/** @type {function(): undefined} */
+			vm.onTempIntervalChange = onTempIntervalChange;
+			/** @type {function(): undefined} */
+			vm.getTemperatures = getTemperatures;
+			activate();
+		}
+		angular.module("smoothieApp").controller("TempCtrl", TempCtrl);
+		/** @type {!Array} */
+		TempCtrl.$inject = ["$interval", "DataService", "localStorageService"];
+	}(), function () {
+		/**
+		 * @param {!Object} $http
+		 * @param {!Object} localStorageService
+		 * @return {?}
+		 */
+		function DataService($http, localStorageService) {
+			/**
+			 * @param {string} cmd
+			 * @return {?}
+			 */
+			function runCommand(cmd) {
+				return cmd = cmd + "\n", $http.post(url, cmd).then(function (simpleselect) {
+					return simpleselect.data;
+				});
+			}
+			/**
+			 * @param {?} out
+			 * @return {undefined}
+			 */
+			function registerOutput(out) {
+				output.push(out);
+			}
+			/**
+			 * @param {string} msg
+			 * @return {undefined}
+			 */
+			function broadcastCommand(msg) {
+				/** @type {number} */
+				var index = 0;
+				for (; index < output.length; ++index) {
+					output[index].updateOutput(msg);
 				}
-
-				function o(e) {
-					for (var t = 0; t < u.length; ++t) u[t].updateOutput(e)
-				}
-
-				function a() {
-					return i
-				}
-
-				function c() {
-					t.set("secondExtruderSupportEnabled", i.supportEnabled ? "true" : "false")
-				}
-				var l = "/command",
-					i = {
-						supportEnabled: "true" == t.get("secondExtruderSupportEnabled")
+			}
+			/**
+			 * @return {?}
+			 */
+			function secondExtruderState() {
+				return extruderState;
+			}
+			/**
+			 * @return {undefined}
+			 */
+			function updateSecondExtruder() {
+				localStorageService.set("secondExtruderSupportEnabled", extruderState.supportEnabled ? "true" : "false");
+			}
+			/** @type {string} */
+			var url = "/command";
+			var extruderState = {
+				supportEnabled: "true" == localStorageService.get("secondExtruderSupportEnabled")
+			};
+			/** @type {!Array} */
+			var output = [];
+			var service = {
+				runCommand: runCommand,
+				registerOutput: registerOutput,
+				broadcastCommand: broadcastCommand,
+				secondExtruderState: secondExtruderState,
+				updateSecondExtruder: updateSecondExtruder
+			};
+			return service;
+		}
+		angular.module("smoothieApp").factory("DataService", DataService);
+		/** @type {!Array} */
+		DataService.$inject = ["$http", "localStorageService"];
+	}(), function (angular, undefined) {
+		/**
+		 * @param {?} $parse
+		 * @param {string} attr
+		 * @param {!Object} scope
+		 * @return {?}
+		 */
+		function createActivationState($parse, attr, scope) {
+			/**
+			 * @param {boolean} initValue
+			 * @return {?}
+			 */
+			function unboundState(initValue) {
+				/** @type {boolean} */
+				var activated = initValue;
+				return {
+					getValue: function () {
+						return activated;
 					},
-					u = [],
-					s = {
-						runCommand: r,
-						registerOutput: n,
-						broadcastCommand: o,
-						secondExtruderState: a,
-						updateSecondExtruder: c
-					};
-				return s
+					setValue: function (value) {
+						activated = value;
+					}
+				};
 			}
-			angular.module("smoothieApp").factory("DataService", e), e.$inject = ["$http", "localStorageService"]
-		}(),
-		function (e, t) {
-			"use strict";
-
-			function r(e, r, n) {
-				function o(e) {
-					var t = e;
-					return {
-						getValue: function () {
-							return t
-						},
-						setValue: function (e) {
-							t = e
-						}
-					}
-				}
-
-				function a(e, t) {
-					return {
-						getValue: function () {
-							return e(t)
-						},
-						setValue: function () { }
-					}
-				}
-
-				function c(e, t, r) {
-					return {
-						getValue: function () {
-							return e(r)
-						},
-						setValue: function (n) {
-							n !== e(r) && r.$apply(function () {
-								t(r, n)
-							})
-						}
-					}
-				}
-				if ("" !== r) {
-					var l = e(r);
-					return l.assign !== t ? c(l, l.assign, n) : a(l, n)
-				}
-				return o(!0)
-			}
-
-			function n(e, t, n) {
-				e.directive(t, ["$parse", "$window", "$timeout", function (e, o, a) {
-					return {
-						priority: 1,
-						restrict: "A",
-						link: function (c, l, i) {
-							function u() {
-								f.getValue() && !n.isAttached(d) && n.scroll(d)
-							}
-
-							function s() {
-								f.setValue(n.isAttached(d))
-							}
-							var d = l[0],
-								f = r(e, i[t], c);
-							c.$watch(u), a(u, 0, !1), o.addEventListener("resize", u, !1), l.bind("scroll", s), l.on("$destroy", function () {
-								l.unbind("scroll", s)
-							}), c.$on("$destroy", function () {
-								o.removeEventListener("resize", u, !1)
-							})
-						}
-					}
-				}])
-			}
-			var o = {
-				isAttached: function (e) {
-					return e.scrollTop + e.clientHeight + 1 >= e.scrollHeight
-				},
-				scroll: function (e) {
-					e.scrollTop = e.scrollHeight
-				}
-			},
-				a = {
-					isAttached: function (e) {
-						return e.scrollTop <= 1
+			/**
+			 * @param {?} getter
+			 * @param {!Object} scope
+			 * @return {?}
+			 */
+			function oneWayBindingState(getter, scope) {
+				return {
+					getValue: function () {
+						return getter(scope);
 					},
-					scroll: function (e) {
-						e.scrollTop = 0
+					setValue: function () {
 					}
-				},
-				c = {
-					isAttached: function (e) {
-						return e.scrollLeft + e.clientWidth + 1 >= e.scrollWidth
-					},
-					scroll: function (e) {
-						e.scrollLeft = e.scrollWidth
-					}
-				},
-				l = {
-					isAttached: function (e) {
-						return e.scrollLeft <= 1
-					},
-					scroll: function (e) {
-						e.scrollLeft = 0
-					}
-				},
-				i = e.module("luegg.directives", []);
-			n(i, "scrollGlue", o), n(i, "scrollGlueTop", a), n(i, "scrollGlueBottom", o), n(i, "scrollGlueLeft", l), n(i, "scrollGlueRight", c)
-		}(angular), ! function (e) {
-			"use strict";
-			if ("object" == typeof exports) module.exports = e("undefined" != typeof angular ? angular : require("angular"), "undefined" != typeof Chart ? Chart : require("chart.js"));
-			else if ("function" == typeof define && define.amd) define(["angular", "chart"], e);
-			else {
-				if ("undefined" == typeof angular || "undefined" == typeof Chart) throw new Error("Chart.js library needs to included, see http://jtblin.github.io/angular-chart.js/");
-				e(angular, Chart)
+				};
 			}
-		}(function (e, t) {
-			"use strict";
-
-			function r() {
-				var r = {
-					responsive: !0
-				},
-					n = {
-						Chart: t,
-						getOptions: function (t) {
-							var n = t && r[t] || {};
-							return e.extend({}, r, n)
-						}
-					};
-				this.setOptions = function (t, n) {
-					return n ? void (r[t] = e.extend(r[t] || {}, n)) : (n = t, void (r = e.extend(r, n)))
-				}, this.$get = function () {
-					return n
-				}
-			}
-
-			function n(r, n) {
-				function a(e, t, n) {
-					var o = T(e, t);
-					if (g(t) && A(e, t, n, o)) {
-						var a = n[0],
-							c = a.getContext("2d");
-						t.chartGetColor = C(t);
-						var l = v(e, t);
-						D(t), t.chart = new r.Chart(c, {
-							type: e,
-							data: l,
-							options: o
-						}), t.$emit("chart-create", t.chart), x(a, t)
-					}
-				}
-
-				function c(e, t) {
-					return !!(e && t && e.length && t.length) && (Array.isArray(e[0]) ? e.length === t.length && e.every(function (e, r) {
-						return e.length === t[r].length
-					}) : t.reduce(l, 0) > 0 && e.length === t.length)
-				}
-
-				function l(e, t) {
-					return e + t
-				}
-
-				function i(t, r, n) {
-					var o = null;
-					return function (a) {
-						var c = t.chart.getElementsAtEvent || t.chart.getPointsAtEvent;
-						if (c) {
-							var l = c.call(t.chart, a);
-							n !== !1 && e.equals(o, l) !== !1 || (o = l, t[r](l, a))
-						}
-					}
-				}
-
-				function u(n, o) {
-					for (var a = e.copy(o.chartColors || r.getOptions(n).chartColors || t.defaults.global.colors), c = a.length < o.chartData.length; a.length < o.chartData.length;) a.push(o.chartGetColor());
-					return c && (o.chartColors = a), a.map(s)
-				}
-
-				function s(e) {
-					return "object" == typeof e && null !== e ? e : "string" == typeof e && "#" === e[0] ? f(p(e.substr(1))) : d()
-				}
-
-				function d() {
-					var e = [h(0, 255), h(0, 255), h(0, 255)];
-					return f(e)
-				}
-
-				function f(e) {
-					return {
-						backgroundColor: m(e, .2),
-						pointBackgroundColor: m(e, 1),
-						pointHoverBackgroundColor: m(e, .8),
-						borderColor: m(e, 1),
-						pointBorderColor: "#fff",
-						pointHoverBorderColor: m(e, 1)
-					}
-				}
-
-				function h(e, t) {
-					return Math.floor(Math.random() * (t - e + 1)) + e
-				}
-
-				function m(e, t) {
-					return o ? "rgb(" + e.join(",") + ")" : "rgba(" + e.concat(t).join(",") + ")"
-				}
-
-				function p(e) {
-					var t = parseInt(e, 16),
-						r = t >> 16 & 255,
-						n = t >> 8 & 255,
-						o = 255 & t;
-					return [r, n, o]
-				}
-
-				function g(e) {
-					return e.chartData && e.chartData.length
-				}
-
-				function C(e) {
-					return "function" == typeof e.chartGetColor ? e.chartGetColor : d
-				}
-
-				function v(e, t) {
-					var r = u(e, t);
-					return Array.isArray(t.chartData[0]) ? b(t.chartLabels, t.chartData, t.chartSeries || [], r, t.chartDatasetOverride) : y(t.chartLabels, t.chartData, r, t.chartDatasetOverride)
-				}
-
-				function b(t, r, n, o, a) {
-					return {
-						labels: t,
-						datasets: r.map(function (t, r) {
-							var c = e.extend({}, o[r], {
-								label: n[r],
-								data: t
+			/**
+			 * @param {?} getter
+			 * @param {?} setter
+			 * @param {!Object} scope
+			 * @return {?}
+			 */
+			function twoWayBindingState(getter, setter, scope) {
+				return {
+					getValue: function () {
+						return getter(scope);
+					},
+					setValue: function (value) {
+						if (value !== getter(scope)) {
+							scope.$apply(function () {
+								setter(scope, value);
 							});
-							return a && a.length >= r && e.merge(c, a[r]), c
-						})
+						}
 					}
-				}
-
-				function y(t, r, n, o) {
-					var a = {
-						labels: t,
-						datasets: [{
-							data: r,
-							backgroundColor: n.map(function (e) {
-								return e.pointBackgroundColor
-							}),
-							hoverBackgroundColor: n.map(function (e) {
-								return e.backgroundColor
-							})
-						}]
-					};
-					return o && e.merge(a.datasets[0], o), a
-				}
-
-				function T(t, n) {
-					return e.extend({}, r.getOptions(t), n.chartOptions)
-				}
-
-				function x(t, r) {
-					t.onclick = r.chartClick ? i(r, "chartClick", !1) : e.noop, t.onmousemove = r.chartHover ? i(r, "chartHover", !0) : e.noop
-				}
-
-				function S(e, t) {
-					Array.isArray(t.chartData[0]) ? t.chart.data.datasets.forEach(function (t, r) {
-						t.data = e[r]
-					}) : t.chart.data.datasets[0].data = e, t.chart.update(), t.$emit("chart-update", t.chart)
-				}
-
-				function k(e) {
-					return !e || Array.isArray(e) && !e.length || "object" == typeof e && !Object.keys(e).length
-				}
-
-				function A(e, t, r, o) {
-					return !o.responsive || 0 !== r[0].clientHeight || (n(function () {
-						a(e, t, r)
-					}, 50, !1), !1)
-				}
-
-				function D(e) {
-					e.chart && (e.chart.destroy(), e.$emit("chart-destroy", e.chart))
-				}
-				return function (t) {
-					return {
-						restrict: "CA",
-						scope: {
-							chartGetColor: "=?",
-							chartType: "=",
-							chartData: "=?",
-							chartLabels: "=?",
-							chartOptions: "=?",
-							chartSeries: "=?",
-							chartColors: "=?",
-							chartClick: "=?",
-							chartHover: "=?",
-							chartDatasetOverride: "=?"
-						},
-						link: function (r, n) {
-							function l(e, o) {
-								if (!e || !e.length || Array.isArray(e[0]) && !e[0].length) return void D(r);
-								var l = t || r.chartType;
-								return l ? r.chart && c(e, o) ? S(e, r) : void a(l, r, n) : void 0
+				};
+			}
+			if ("" !== attr) {
+				var getter = $parse(attr);
+				return getter.assign !== undefined ? twoWayBindingState(getter, getter.assign, scope) : oneWayBindingState(getter, scope);
+			}
+			return unboundState(true);
+		}
+		/**
+		 * @param {?} module
+		 * @param {string} attrName
+		 * @param {!Object} direction
+		 * @return {undefined}
+		 */
+		function createDirective(module, attrName, direction) {
+			module.directive(attrName, ["$parse", "$window", "$timeout", function ($parse, $window, $timeout) {
+				return {
+					priority: 1,
+					restrict: "A",
+					link: function (scope, element, attrs) {
+						/**
+						 * @return {undefined}
+						 */
+						function scrollIfGlued() {
+							if (activationState.getValue() && !direction.isAttached(el)) {
+								direction.scroll(el);
 							}
-
-							function i(o, c) {
-								if (!k(o) && !e.equals(o, c)) {
-									var l = t || r.chartType;
-									l && a(l, r, n)
+						}
+						/**
+						 * @return {undefined}
+						 */
+						function onScroll() {
+							activationState.setValue(direction.isAttached(el));
+						}
+						var el = element[0];
+						var activationState = createActivationState($parse, attrs[attrName], scope);
+						scope.$watch(scrollIfGlued);
+						$timeout(scrollIfGlued, 0, false);
+						$window.addEventListener("resize", scrollIfGlued, false);
+						element.bind("scroll", onScroll);
+						element.on("$destroy", function () {
+							element.unbind("scroll", onScroll);
+						});
+						scope.$on("$destroy", function () {
+							$window.removeEventListener("resize", scrollIfGlued, false);
+						});
+					}
+				};
+			}]);
+		}
+		var right = {
+			isAttached: function (el) {
+				return el.scrollTop + el.clientHeight + 1 >= el.scrollHeight;
+			},
+			scroll: function (element) {
+				element.scrollTop = element.scrollHeight;
+			}
+		};
+		var bottom = {
+			isAttached: function (el) {
+				return el.scrollTop <= 1;
+			},
+			scroll: function (p) {
+				/** @type {number} */
+				p.scrollTop = 0;
+			}
+		};
+		var top = {
+			isAttached: function (el) {
+				return el.scrollLeft + el.clientWidth + 1 >= el.scrollWidth;
+			},
+			scroll: function (data) {
+				data.scrollLeft = data.scrollWidth;
+			}
+		};
+		var left = {
+			isAttached: function (el) {
+				return el.scrollLeft <= 1;
+			},
+			scroll: function (p) {
+				/** @type {number} */
+				p.scrollLeft = 0;
+			}
+		};
+		var module = angular.module("luegg.directives", []);
+		createDirective(module, "scrollGlue", right);
+		createDirective(module, "scrollGlueTop", bottom);
+		createDirective(module, "scrollGlueBottom", right);
+		createDirective(module, "scrollGlueLeft", left);
+		createDirective(module, "scrollGlueRight", top);
+	}(angular), !function (factory) {
+		if ("object" == typeof exports) {
+			module.exports = factory("undefined" != typeof angular ? angular : require("angular"), "undefined" != typeof Chart ? Chart : require("chart.js"));
+		} else {
+			if ("function" == typeof define && define.amd) {
+				define(["angular", "chart"], factory);
+			} else {
+				if ("undefined" == typeof angular || "undefined" == typeof Chart) {
+					throw new Error("Chart.js library needs to included, see http://jtblin.github.io/angular-chart.js/");
+				}
+				factory(angular, Chart);
+			}
+		}
+	}(function (angular, Chart) {
+		/**
+		 * @return {undefined}
+		 */
+		function ChartJsProvider() {
+			var options = {
+				responsive: true
+			};
+			var ChartJs = {
+				Chart: Chart,
+				getOptions: function (type) {
+					var blockElements = type && options[type] || {};
+					return angular.extend({}, options, blockElements);
+				}
+			};
+			/**
+			 * @param {string} type
+			 * @param {string} customOptions
+			 * @return {?}
+			 */
+			this.setOptions = function (type, customOptions) {
+				return customOptions ? void (options[type] = angular.extend(options[type] || {}, customOptions)) : (customOptions = type, void (options = angular.extend(options, customOptions)));
+			};
+			/**
+			 * @return {?}
+			 */
+			this.$get = function () {
+				return ChartJs;
+			};
+		}
+		/**
+		 * @param {?} ChartJs
+		 * @param {?} $timeout
+		 * @return {?}
+		 */
+		function ChartJsFactory(ChartJs, $timeout) {
+			/**
+			 * @param {!Object} type
+			 * @param {!Object} scope
+			 * @param {!Object} elem
+			 * @return {undefined}
+			 */
+			function createChart(type, scope, elem) {
+				var options = getChartOptions(type, scope);
+				if (hasData(scope) && canDisplay(type, scope, elem, options)) {
+					var el = elem[0];
+					var ctx = el.getContext("2d");
+					scope.chartGetColor = getChartColorFn(scope);
+					var data = getChartData(type, scope);
+					destroyChart(scope);
+					scope.chart = new ChartJs.Chart(ctx, {
+						type: type,
+						data: data,
+						options: options
+					});
+					scope.$emit("chart-create", scope.chart);
+					bindEvents(el, scope);
+				}
+			}
+			/**
+			 * @param {!Object} newVal
+			 * @param {!Object} oldVal
+			 * @return {?}
+			 */
+			function canUpdateChart(newVal, oldVal) {
+				return !!(newVal && oldVal && newVal.length && oldVal.length) && (Array.isArray(newVal[0]) ? newVal.length === oldVal.length && newVal.every(function (progressiveData, name) {
+					return progressiveData.length === oldVal[name].length;
+				}) : oldVal.reduce(sum, 0) > 0 && newVal.length === oldVal.length);
+			}
+			/**
+			 * @param {(Object|number)} rowGroupKey
+			 * @param {!Object} colGroupKey
+			 * @return {?}
+			 */
+			function sum(rowGroupKey, colGroupKey) {
+				return rowGroupKey + colGroupKey;
+			}
+			/**
+			 * @param {!Object} scope
+			 * @param {string} action
+			 * @param {boolean} triggerOnlyOnChange
+			 * @return {?}
+			 */
+			function getEventHandler(scope, action, triggerOnlyOnChange) {
+				/** @type {null} */
+				var lastState = null;
+				return function (evt) {
+					var atEvents = scope.chart.getElementsAtEvent || scope.chart.getPointsAtEvent;
+					if (atEvents) {
+						var activePoints = atEvents.call(scope.chart, evt);
+						if (!(triggerOnlyOnChange !== false && angular.equals(lastState, activePoints) !== false)) {
+							lastState = activePoints;
+							scope[action](activePoints, evt);
+						}
+					}
+				};
+			}
+			/**
+			 * @param {string} type
+			 * @param {!Object} scope
+			 * @return {?}
+			 */
+			function getColors(type, scope) {
+				var colors = angular.copy(scope.chartColors || ChartJs.getOptions(type).chartColors || Chart.defaults.global.colors);
+				/** @type {boolean} */
+				var c = colors.length < scope.chartData.length;
+				for (; colors.length < scope.chartData.length;) {
+					colors.push(scope.chartGetColor());
+				}
+				return c && (scope.chartColors = colors), colors.map(convertColor);
+			}
+			/**
+			 * @param {number} a
+			 * @return {?}
+			 */
+			function convertColor(a) {
+				return "object" == typeof a && null !== a ? a : "string" == typeof a && "#" === a[0] ? getColor(hexToRgb(a.substr(1))) : getRandomColor();
+			}
+			/**
+			 * @return {?}
+			 */
+			function getRandomColor() {
+				/** @type {!Array} */
+				var color = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255)];
+				return getColor(color);
+			}
+			/**
+			 * @param {!Array} color
+			 * @return {?}
+			 */
+			function getColor(color) {
+				return {
+					backgroundColor: rgba(color, .2),
+					pointBackgroundColor: rgba(color, 1),
+					pointHoverBackgroundColor: rgba(color, .8),
+					borderColor: rgba(color, 1),
+					pointBorderColor: "#fff",
+					pointHoverBorderColor: rgba(color, 1)
+				};
+			}
+			/**
+			 * @param {number} min
+			 * @param {number} max
+			 * @return {?}
+			 */
+			function getRandomInt(min, max) {
+				return Math.floor(Math.random() * (max - min + 1)) + min;
+			}
+			/**
+			 * @param {!Array} color
+			 * @param {number} alpha
+			 * @return {?}
+			 */
+			function rgba(color, alpha) {
+				return o ? "rgb(" + color.join(",") + ")" : "rgba(" + color.concat(alpha).join(",") + ")";
+			}
+			/**
+			 * @param {string} byte1
+			 * @return {?}
+			 */
+			function hexToRgb(byte1) {
+				/** @type {number} */
+				var firstByte = parseInt(byte1, 16);
+				/** @type {number} */
+				var r = firstByte >> 16 & 255;
+				/** @type {number} */
+				var n = firstByte >> 8 & 255;
+				/** @type {number} */
+				var totalCCs = 255 & firstByte;
+				return [r, n, totalCCs];
+			}
+			/**
+			 * @param {!Object} scope
+			 * @return {?}
+			 */
+			function hasData(scope) {
+				return scope.chartData && scope.chartData.length;
+			}
+			/**
+			 * @param {!Object} scope
+			 * @return {?}
+			 */
+			function getChartColorFn(scope) {
+				return "function" == typeof scope.chartGetColor ? scope.chartGetColor : getRandomColor;
+			}
+			/**
+			 * @param {boolean} type
+			 * @param {!Object} scope
+			 * @return {?}
+			 */
+			function getChartData(type, scope) {
+				var colors = getColors(type, scope);
+				return Array.isArray(scope.chartData[0]) ? getDataSets(scope.chartLabels, scope.chartData, scope.chartSeries || [], colors, scope.chartDatasetOverride) : getData(scope.chartLabels, scope.chartData, colors, scope.chartDatasetOverride);
+			}
+			/**
+			 * @param {!Object} labels
+			 * @param {?} series
+			 * @param {!Object} data
+			 * @param {!Object} colors
+			 * @param {string} datasetOverride
+			 * @return {?}
+			 */
+			function getDataSets(labels, series, data, colors, datasetOverride) {
+				return {
+					labels: labels,
+					datasets: series.map(function (instancesTypes, i) {
+						var c = angular.extend({}, colors[i], {
+							label: data[i],
+							data: instancesTypes
+						});
+						return datasetOverride && datasetOverride.length >= i && angular.merge(c, datasetOverride[i]), c;
+					})
+				};
+			}
+			/**
+			 * @param {!Object} id
+			 * @param {string} instruction
+			 * @param {?} text
+			 * @param {?} args
+			 * @return {?}
+			 */
+			function getData(id, instruction, text, args) {
+				var parsedData = {
+					labels: id,
+					datasets: [{
+						data: instruction,
+						backgroundColor: text.map(function (color) {
+							return color.pointBackgroundColor;
+						}),
+						hoverBackgroundColor: text.map(function (viewerConfig) {
+							return viewerConfig.backgroundColor;
+						})
+					}]
+				};
+				return args && angular.merge(parsedData.datasets[0], args), parsedData;
+			}
+			/**
+			 * @param {boolean} type
+			 * @param {!Object} scope
+			 * @return {?}
+			 */
+			function getChartOptions(type, scope) {
+				return angular.extend({}, ChartJs.getOptions(type), scope.chartOptions);
+			}
+			/**
+			 * @param {!Element} el
+			 * @param {!Object} scope
+			 * @return {undefined}
+			 */
+			function bindEvents(el, scope) {
+				el.onclick = scope.chartClick ? getEventHandler(scope, "chartClick", false) : angular.noop;
+				el.onmousemove = scope.chartHover ? getEventHandler(scope, "chartHover", true) : angular.noop;
+			}
+			/**
+			 * @param {string} values
+			 * @param {!Object} scope
+			 * @return {undefined}
+			 */
+			function updateChart(values, scope) {
+				if (Array.isArray(scope.chartData[0])) {
+					scope.chart.data.datasets.forEach(function (event, id) {
+						event.data = values[id];
+					});
+				} else {
+					/** @type {string} */
+					scope.chart.data.datasets[0].data = values;
+				}
+				scope.chart.update();
+				scope.$emit("chart-update", scope.chart);
+			}
+			/**
+			 * @param {!NodeList} value
+			 * @return {?}
+			 */
+			function isEmpty(value) {
+				return !value || Array.isArray(value) && !value.length || "object" == typeof value && !Object.keys(value).length;
+			}
+			/**
+			 * @param {!Object} type
+			 * @param {!Object} scope
+			 * @param {!Object} elem
+			 * @param {!Object} options
+			 * @return {?}
+			 */
+			function canDisplay(type, scope, elem, options) {
+				return !options.responsive || 0 !== elem[0].clientHeight || ($timeout(function () {
+					createChart(type, scope, elem);
+				}, 50, false), false);
+			}
+			/**
+			 * @param {!Object} scope
+			 * @return {undefined}
+			 */
+			function destroyChart(scope) {
+				if (scope.chart) {
+					scope.chart.destroy();
+					scope.$emit("chart-destroy", scope.chart);
+				}
+			}
+			return function (type) {
+				return {
+					restrict: "CA",
+					scope: {
+						chartGetColor: "=?",
+						chartType: "=",
+						chartData: "=?",
+						chartLabels: "=?",
+						chartOptions: "=?",
+						chartSeries: "=?",
+						chartColors: "=?",
+						chartClick: "=?",
+						chartHover: "=?",
+						chartDatasetOverride: "=?"
+					},
+					link: function (scope, elem) {
+						/**
+						 * @param {string} newVal
+						 * @param {!Object} oldVal
+						 * @return {?}
+						 */
+						function watchData(newVal, oldVal) {
+							if (!newVal || !newVal.length || Array.isArray(newVal[0]) && !newVal[0].length) {
+								return void destroyChart(scope);
+							}
+							var chartType = type || scope.chartType;
+							return chartType ? scope.chart && canUpdateChart(newVal, oldVal) ? updateChart(newVal, scope) : void createChart(chartType, scope, elem) : void 0;
+						}
+						/**
+						 * @param {(Node|NodeList|string)} newVal
+						 * @param {?} oldVal
+						 * @return {undefined}
+						 */
+						function resetChart(newVal, oldVal) {
+							if (!isEmpty(newVal) && !angular.equals(newVal, oldVal)) {
+								var chartType = type || scope.chartType;
+								if (chartType) {
+									createChart(chartType, scope, elem);
 								}
 							}
-
-							function u(t, o) {
-								k(t) || e.equals(t, o) || a(t, r, n)
-							}
-							o && window.G_vmlCanvasManager.initElement(n[0]), r.$watch("chartData", l, !0), r.$watch("chartSeries", i, !0), r.$watch("chartLabels", i, !0), r.$watch("chartOptions", i, !0), r.$watch("chartColors", i, !0), r.$watch("chartDatasetOverride", i, !0), r.$watch("chartType", u, !1), r.$on("$destroy", function () {
-								D(r)
-							}), r.$on("$resize", function () {
-								r.chart && r.chart.resize()
-							})
 						}
+						/**
+						 * @param {!NodeList} type
+						 * @param {?} target
+						 * @return {undefined}
+						 */
+						function update(type, target) {
+							if (!(isEmpty(type) || angular.equals(type, target))) {
+								createChart(type, scope, elem);
+							}
+						}
+						if (o) {
+							window.G_vmlCanvasManager.initElement(elem[0]);
+						}
+						scope.$watch("chartData", watchData, true);
+						scope.$watch("chartSeries", resetChart, true);
+						scope.$watch("chartLabels", resetChart, true);
+						scope.$watch("chartOptions", resetChart, true);
+						scope.$watch("chartColors", resetChart, true);
+						scope.$watch("chartDatasetOverride", resetChart, true);
+						scope.$watch("chartType", update, false);
+						scope.$on("$destroy", function () {
+							destroyChart(scope);
+						});
+						scope.$on("$resize", function () {
+							if (scope.chart) {
+								scope.chart.resize();
+							}
+						});
 					}
-				}
-			}
-			t.defaults.global.multiTooltipTemplate = "<%if (datasetLabel){%><%=datasetLabel%>: <%}%><%= value %>", t.defaults.global.tooltips.mode = "label", t.defaults.global.elements.line.borderWidth = 2, t.defaults.global.elements.rectangle.borderWidth = 2, t.defaults.global.legend.display = !1, t.defaults.global.colors = ["#97BBCD", "#DCDCDC", "#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"];
-			var o = "object" == typeof window.G_vmlCanvasManager && null !== window.G_vmlCanvasManager && "function" == typeof window.G_vmlCanvasManager.initElement;
-			return o && (t.defaults.global.animation = !1), e.module("chart.js", []).provider("ChartJs", r).factory("ChartJsFactory", ["ChartJs", "$timeout", n]).directive("chartBase", ["ChartJsFactory", function (e) {
-				return new e
-			}]).directive("chartLine", ["ChartJsFactory", function (e) {
-				return new e("line")
-			}]).directive("chartBar", ["ChartJsFactory", function (e) {
-				return new e("bar")
-			}]).directive("chartHorizontalBar", ["ChartJsFactory", function (e) {
-				return new e("horizontalBar")
-			}]).directive("chartRadar", ["ChartJsFactory", function (e) {
-				return new e("radar")
-			}]).directive("chartDoughnut", ["ChartJsFactory", function (e) {
-				return new e("doughnut")
-			}]).directive("chartPie", ["ChartJsFactory", function (e) {
-				return new e("pie")
-			}]).directive("chartPolarArea", ["ChartJsFactory", function (e) {
-				return new e("polarArea")
-			}]).directive("chartBubble", ["ChartJsFactory", function (e) {
-				return new e("bubble")
-			}]).name
-		});
+				};
+			};
+		}
+		/** @type {string} */
+		Chart.defaults.global.multiTooltipTemplate = "<%if (datasetLabel){%><%=datasetLabel%>: <%}%><%= value %>";
+		/** @type {string} */
+		Chart.defaults.global.tooltips.mode = "label";
+		/** @type {number} */
+		Chart.defaults.global.elements.line.borderWidth = 2;
+		/** @type {number} */
+		Chart.defaults.global.elements.rectangle.borderWidth = 2;
+		/** @type {boolean} */
+		Chart.defaults.global.legend.display = false;
+		/** @type {!Array} */
+		Chart.defaults.global.colors = ["#97BBCD", "#DCDCDC", "#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"];
+		/** @type {boolean} */
+		var o = "object" == typeof window.G_vmlCanvasManager && null !== window.G_vmlCanvasManager && "function" == typeof window.G_vmlCanvasManager.initElement;
+		return o && (Chart.defaults.global.animation = false), angular.module("chart.js", []).provider("ChartJs", ChartJsProvider).factory("ChartJsFactory", ["ChartJs", "$timeout", ChartJsFactory]).directive("chartBase", ["ChartJsFactory", function (canCreateDiscussions) {
+			return new canCreateDiscussions;
+		}]).directive("chartLine", ["ChartJsFactory", function (ChartJsFactory) {
+			return new ChartJsFactory("line");
+		}]).directive("chartBar", ["ChartJsFactory", function (ChartJsFactory) {
+			return new ChartJsFactory("bar");
+		}]).directive("chartHorizontalBar", ["ChartJsFactory", function (ChartJsFactory) {
+			return new ChartJsFactory("horizontalBar");
+		}]).directive("chartRadar", ["ChartJsFactory", function (ChartJsFactory) {
+			return new ChartJsFactory("radar");
+		}]).directive("chartDoughnut", ["ChartJsFactory", function (ChartJsFactory) {
+			return new ChartJsFactory("doughnut");
+		}]).directive("chartPie", ["ChartJsFactory", function (ChartJsFactory) {
+			return new ChartJsFactory("pie");
+		}]).directive("chartPolarArea", ["ChartJsFactory", function (ChartJsFactory) {
+			return new ChartJsFactory("polarArea");
+		}]).directive("chartBubble", ["ChartJsFactory", function (ChartJsFactory) {
+			return new ChartJsFactory("bubble");
+		}]).name;
+	});
+
 </script>
 
 </html>
