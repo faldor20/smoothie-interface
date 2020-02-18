@@ -934,7 +934,7 @@ Build date: 2016-06-28
 												class="btn btn-primary glyphicon glyphicon-off"></button>
 										</td>
 										<td class="col-lg-6">
-											<input type="text" style="width:50px" value="200"
+											<input type="text" style="width:50px" value="220"
 												data-ng-model="tempVM.heaterT0SelectedTemp"
 												data-ng-keyup="tempVM.handleKeyUp($event, 'T0')">&deg;C
 										</td>
@@ -951,7 +951,7 @@ Build date: 2016-06-28
 												class="btn btn-primary glyphicon glyphicon-off"></button>
 										</td>
 										<td class="col-lg-6">
-											<input type="text" style="width:50px" value="200"
+											<input type="text" style="width:50px" value="220"
 												data-ng-model="tempVM.heaterT1SelectedTemp"
 												data-ng-keyup="tempVM.handleKeyUp($event, 'T1')">&deg;C
 										</td>
@@ -1489,7 +1489,7 @@ Build date: 2016-06-28
 							}
 						}]
 					}
-				}, d.localTempInterval = {}, d.tempInterval = r.get("tempInterval") || 3, d.autoCheckEnabled = "true" == r.get("autoCheckEnabled"), d.heaterT0SelectedTemp = 0, d.heaterT0ActualTemp = "-", d.heaterT0DisplayTemp = "", d.heaterT1SelectedTemp = 0, d.heaterT1ActualTemp = "-", d.heaterT1DisplayTemp = "", d.bedSelectedTemp = 0, d.bedActualTemp = "-", d.bedDisplayTemp = "", d.onTimeout = o, d.heatOff = a, d.heatSet = c, d.handleKeyUp = l, d.onAutoCheckChange = i, d.onTempIntervalChange = u, d.getTemperatures = s, n()
+				}, d.localTempInterval = {}, d.tempInterval = r.get("tempInterval") || 3, d.autoCheckEnabled = "true" == r.get("autoCheckEnabled"), d.heaterT0SelectedTemp = 220, d.heaterT0ActualTemp = "-", d.heaterT0DisplayTemp = "", d.heaterT1SelectedTemp = 220, d.heaterT1ActualTemp = "-", d.heaterT1DisplayTemp = "", d.bedSelectedTemp = 60, d.bedActualTemp = "-", d.bedDisplayTemp = "", d.onTimeout = o, d.heatOff = a, d.heatSet = c, d.handleKeyUp = l, d.onAutoCheckChange = i, d.onTempIntervalChange = u, d.getTemperatures = s, n()
 			}
 			angular.module("smoothieApp").controller("TempCtrl", e), e.$inject = ["$interval", "DataService", "localStorageService"]
 		}(),
