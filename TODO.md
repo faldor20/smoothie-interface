@@ -5,7 +5,7 @@
 [x]4. I would have it auto check temperatures every 3 seconds by default and get rid of the check box options for that
 	i would need to look into this, angular gets the info from 
 [x]5. Get rid of the speed and motors off boxes and buttons
-[]6. Change “controls” label to “Movement Controls”
+[x]6. Change “controls” label to “Movement Controls”
 []7. Change Middle column heading to “Temperature Control”
 []8. Change middle column sub headings to “Name Off Temp Set Value/Target”
 []9. Change “Heater T0” to “Extruder LHS” and “Heater T0” to “Extruder RHS”
