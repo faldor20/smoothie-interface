@@ -613,7 +613,13 @@ Build date: 2016-06-28
 			data-ng-controller="HeaderCtrl as headerVM">
 			<div class="navbar-header"><a class="navbar-brand" href="index.html">Workshop 3DP webUI - </a><a
 					class="navbar-brand" editable-text="headerVM.printerName" onaftersave="headerVM.updatePrinterName()"
-					data-ng-bind="headerVM.printerName"></a></div>
+					data-ng-bind="headerVM.printerName"></a>
+
+			</div>
+			<div class="navbar-brand">
+				Connected=
+				<span data-ng-controller="TempCtrl as tempVM" data-ng-bind="tempVM.isConnected" />
+			</div>
 		</nav><!-- / navbar -->
 		<div id="page-wrapper">
 			<div class="row">
@@ -1735,6 +1741,7 @@ Build date: 2016-06-28
 			 */
 			function getTemperatures() {
 				DataService.runCommand("M105").then(function (result_data) {
+					vm.isConnected = true;
 					DataService.broadcastCommand(result_data);
 					var result;
 					/** @type {!RegExp} */
@@ -1777,10 +1784,15 @@ Build date: 2016-06-28
 						vm.dataBed[0].push(vm.bedActualTemp);
 					}
 				}, function (xhr) {
+					vm.isConnected = false;
 					console.error(xhr.statusText);
 				});
 			}
 			var vm = this;
+
+			/** @type{boolean}*/
+			vm.isConnected = false;
+
 			vm.secondExtruder = DataService.secondExtruderState();
 			/** @type {!Array} */
 			vm.labels = [];

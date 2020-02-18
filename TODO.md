@@ -11,6 +11,6 @@
 [x]9. Change “Heater T0” to “Extruder LHS” and “Heater T0” to “Extruder RHS”
 [x]10. Change default temps from “0” to 220 for extruders and 60 for bed
 [x]11. Instead of the temp graphs may have label that says: “Preheat 10°C above print temperatures”
-[]12. It should have a “connected” indicator up top next to name of printer- this should be easy as we are getting temp every 3 seconds so you should be getting data packets back beginning with “ok” every three seconds- if not then printer is turned off or not connected to network – you can see this data in the bottom right hand corner in commands window.
+[x]12. It should have a “connected” indicator up top next to name of printer- this should be easy as we are getting temp every 3 seconds so you should be getting data packets back beginning with “ok” every three seconds- if not then printer is turned off or not connected to network – you can see this data in the bottom right hand corner in commands window.
 [x]13. Replace “Smoothieware webUI” with “Workshop 3DP webUI:”
 [x]14. Get rid of the Language option for polish, just English as default.
