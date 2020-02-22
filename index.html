@@ -1089,6 +1089,11 @@ Build date: 2016-06-28
 						<div class="panel-heading"><span translate>Commands</span>
 							<div class="pull-right"><button class="btn btn-xs btn-primary" data-ng-click="cmdVM.clear()"
 									translate>Clear</button></div>
+							<div class="pull-right" style="margin-right: 1rem;"><button class="btn btn-xs btn-primary"
+									data-ng-click="cmdVM.resumePrint()" translate>Resume Print</button></div>
+							<div class="pull-right" style="margin-right: 1rem;"><button class="btn btn-xs btn-primary"
+									data-ng-click="cmdVM.suspendPrint()" translate>Suspend Print</button></div>
+
 						</div>
 						<div class="panel-body panel-height">
 							<pre data-ng-bind-html="cmdVM.commandOutput" style="min-height:260px;max-height:260px"
@@ -1283,6 +1288,25 @@ Build date: 2016-06-28
 				}
 				vm.commandOutput = output;
 			}
+			function resumePrint() {
+				console.log("Resuming Print");
+				DataService.runCommand("resume").then(function (result_data) {
+					vm.updateOutput(result_data);
+					vm.cmdHistory.push("resume");
+					vm.cmdHistory.slice(-300);
+					vm.cmdHistoryIdx = vm.cmdHistory.length;
+				});
+			}
+			function suspendPrint() {
+				console.log("Suspending Print");
+				DataService.runCommand("suspend").then(function (result_data) {
+					vm.updateOutput(result_data);
+					vm.cmdHistory.push("suspend");
+					vm.cmdHistory.slice(-300);
+					vm.cmdHistoryIdx = vm.cmdHistory.length;
+				});
+			}
+
 			var vm = this;
 			/** @type {!Array} */
 			vm.log = [];
@@ -1310,6 +1334,9 @@ Build date: 2016-06-28
 			vm.onFilterChange = onFilterChange;
 			/** @type {function(string): undefined} */
 			vm.updateOutput = updateOutput;
+
+			vm.resumePrint = resumePrint;
+			vm.resumePrint = suspendPrint;
 			activate();
 		}
 		angular.module("smoothieApp").controller("CommandCtrl", CommandCtrl);
