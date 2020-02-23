@@ -1,5 +1,7 @@
 
 [] 1. Heater T0 data never shows up next to red/white tick
+
+	it shows the other two. sometimes worked when second extruder was not enabled
 [x]2. The graphs are shit and a waste of time in my view and should go altogether
 [x]3. The third column contents can go altogether- we don’t need to be able to extrude/reverse as we have screen on printer for that- however, enable second extruder check box we need to keep for switching between dual and single extruder printers
 [x]4. I would have it auto check temperatures every 3 seconds by default and get rid of the check box options for that
@@ -14,3 +16,6 @@
 [x]12. It should have a “connected” indicator up top next to name of printer- this should be easy as we are getting temp every 3 seconds so you should be getting data packets back beginning with “ok” every three seconds- if not then printer is turned off or not connected to network – you can see this data in the bottom right hand corner in commands window.
 [x]13. Replace “Smoothieware webUI” with “Workshop 3DP webUI:”
 [x]14. Get rid of the Language option for polish, just English as default.
+
+[]add a at temperature column to extruders and bed (red an green)
+
