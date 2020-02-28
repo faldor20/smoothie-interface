@@ -2,6 +2,8 @@
 [] 1. Heater T0 data never shows up next to red/white tick
 	it shows the other two. sometimes worked when second extruder was not enabled
 	original code does not have dual extruders but it does work consistently
+
+	i need to just rewrite the regex for the temperature, ill do ti using a some test data from G
 [x]2. The graphs are shit and a waste of time in my view and should go altogether
 [x]3. The third column contents can go altogether- we don’t need to be able to extrude/reverse as we have screen on printer for that- however, enable second extruder check box we need to keep for switching between dual and single extruder printers
 [x]4. I would have it auto check temperatures every 3 seconds by default and get rid of the check box options for that
@@ -26,7 +28,8 @@
 		smoothie appears to have a get command it is only referenced in the example of help output hetre: http://smoothieware.org/console-commands?s[]=get
 		smoothie allso has some info in the network tab about quiries
 
-[]add back graphs for the temperatures
+[x]add back graphs for the temperatures
+	[]test graphs
 
 [x] add reminder about filenames not containing spaces after the files
 
@@ -38,5 +41,7 @@
 
 
 # Laser
+[x] file upload implimented
+	[]tested
 []make it possible for connected to appear without temperature data
 

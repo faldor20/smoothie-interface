@@ -1008,6 +1008,17 @@ Build date: 2016-06-28
 								</div>
 							</div>
 						</div>
+						<div class="row">
+							<div class="col-lg-6"><canvas id="heaterTempBar" height="140" class="chart chart-line"
+									data-chart-type="line" data-chart-data="tempVM.dataHeater"
+									data-chart-labels="tempVM.labels" data-chart-series="tempVM.seriesHeater"
+									data-chart-options="tempVM.options" data-chart-legend="true"
+									data-chart-colors="tempVM.heaterColours"></canvas></div>
+							<div class="col-lg-6"><canvas id="bedTempBar" height="140" class="chart chart-line"
+									data-chart-data="tempVM.dataBed" data-chart-labels="tempVM.labels"
+									data-chart-series="tempVM.seriesBed" data-chart-options="tempVM.options"
+									data-chart-legend="true" data-chart-colors="tempVM.bedColours"></canvas></div>
+						</div>
 						<!-- This section contains the extrude reverse  -->
 						<!-- <div class="panel-body panel-height">
 							<table class="table">
