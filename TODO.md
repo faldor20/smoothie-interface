@@ -5,7 +5,7 @@
 [x]2. The graphs are shit and a waste of time in my view and should go altogether
 [x]3. The third column contents can go altogether- we don’t need to be able to extrude/reverse as we have screen on printer for that- however, enable second extruder check box we need to keep for switching between dual and single extruder printers
 [x]4. I would have it auto check temperatures every 3 seconds by default and get rid of the check box options for that
-	i would need to look into this, angular gets the info from 
+	i would need to look into this, angular gets the info from
 [x]5. Get rid of the speed and motors off boxes and buttons
 [x]6. Change “controls” label to “Movement Controls”
 [x]7. Change Middle column heading to “Temperature Control”
@@ -18,4 +18,9 @@
 [x]14. Get rid of the Language option for polish, just English as default.
 
 []add a at temperature column to extruders and bed (red an green)
+
+
+
+# Laser
+[]make it possible for connected to appear without temperature data
 
