@@ -1050,7 +1050,8 @@ Build date: 2016-06-28
 				</div>
 				<div id="filePanel" class="col-lg-6 col-md-6">
 					<div class="panel panel-default" data-ng-controller="FileCtrl as fileVM">
-						<div class="panel-heading"><span translate>Files</span>
+						<div class="panel-heading"><span translate>Files </span>
+							<span class="ng-scope">File names must not contain spaces</span>
 							<div class="pull-right"><button class="btn btn-xs btn-primary"
 									data-ng-click="fileVM.refreshFiles()" translate>Refresh</button> <button
 									class="btn btn-xs btn-primary" data-ng-click="fileVM.progress()"
@@ -1461,9 +1462,16 @@ Build date: 2016-06-28
 			 */
 			function uploadFile(file) {
 				if (file) {
-					DataService.broadcastCommand("Uploading: " + file.name + "\n");
+					/**@type{string}*/
+					var a = file.name;
+					var sendingName = file.name
+					if (a.includes(" ")) {
+						DataService.broadcastCommand("Spaces changed to _'s \n");
+						sendingName = a.replace(" ", "_")
+					}
+					DataService.broadcastCommand("Uploading: " + sendingName + "\n");
 					vm.currentUploadedFile = {
-						filename: file.name,
+						filename: sendingName,
 						uploading: true,
 						percentage: 0
 					};
@@ -1471,7 +1479,7 @@ Build date: 2016-06-28
 					Upload.http({
 						url: "/upload",
 						headers: {
-							"X-Filename": file.name
+							"X-Filename": sendingName
 						},
 						data: file
 					}).then(function (canCreateDiscussions) {
@@ -1767,13 +1775,19 @@ Build date: 2016-06-28
 			 * @return {undefined}
 			 */
 			function getTemperatures() {
-				DataService.runCommand("M105").then(function (result_data) {
+				DataService.runCommand("M105").then(function (smoothieTempData) {
 					vm.isConnected = true;
-					DataService.broadcastCommand(result_data);
+					//? so we get a sequence of temperature data:
+					DataService.broadcastCommand(smoothieTempData);
 					var result;
+
+					//we make a regular expression to chop up the inputs
 					/** @type {!RegExp} */
 					var regex_temp = /(B|T(\d*)):\s*([+]?[0-9]*\.?[0-9]+)? (\/)([+]?[0-9]*\.?[0-9]+)?/gi;
-					for (; null !== (result = regex_temp.exec(result_data));) {
+
+					//we iterate over the regex matches
+					for (; null !== (result = regex_temp.exec(smoothieTempData));) {
+						//the first letter should be the source of the temperature:
 						/** @type {string} */
 						var type = result[1];
 						/** @type {string} */

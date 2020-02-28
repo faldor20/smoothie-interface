@@ -310,7 +310,10 @@
 		 */
 		function uploadFile(file) {
 			if (file) {
-				DataService.broadcastCommand("Uploading: " + file.name + "\n");
+				/**@type {string} */
+				var a = file.name
+				var b = a.
+					DataService.broadcastCommand("Uploading: " + file.name + "\n");
 				vm.currentUploadedFile = {
 					filename: file.name,
 					uploading: true,
