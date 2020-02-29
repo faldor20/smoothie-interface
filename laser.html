@@ -678,22 +678,23 @@ Build date: 2016-06-28
 									data-ng-click="cmdVM.sendCommand()" class="btn btn-success" translate>Send</button>
 								&nbsp;&nbsp;<label><input type="checkbox" data-ng-model="cmdVM.autoscrollEnabled"> <span
 										translate>Autoscroll</span></label>&nbsp;&nbsp;<label>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.5.7/angular-sanitize.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.3.3/ui-bootstrap-tpls.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-gettext/2.3.4/angular-gettext.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-xeditable/0.2.0/js/xeditable.min.js"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/angular-local-storage/0.2.7/angular-local-storage.min.js"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.0.4/ng-file-upload.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.5.7/angular-sanitize.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.3.3/ui-bootstrap-tpls.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-gettext/2.3.4/angular-gettext.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-xeditable/0.2.0/js/xeditable.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/angular-local-storage/0.2.7/angular-local-storage.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.0.4/ng-file-upload.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>
 </body>
 <script>
 	'use strict';
@@ -773,969 +774,977 @@ Build date: 2016-06-28
 			"Value | Target": "Pomiar | Cel"
 		});
 	}]),
-	//********* command console***//
-	function () {
-		/**
-		 * @param {?} $scope
-		 * @param {?} DataService
-		 * @return {undefined}
-		 */
-		function CommandCtrl($scope, DataService) {
+		//********* command console***//
+		function () {
 			/**
+			 * @param {?} $scope
+			 * @param {?} DataService
 			 * @return {undefined}
 			 */
-			function activate() {
-				DataService.registerOutput(vm);
-			}
-			/**
-			 * @return {undefined}
-			 */
-			function sendCommand() {
-				if (vm.command) {
-					console.log("Command: " + vm.command);
-					DataService.runCommand(vm.command).then(function (result_data) {
-						vm.updateOutput(result_data);
-						vm.cmdHistory.push(vm.command);
-						vm.cmdHistory.slice(-300);
-						vm.cmdHistoryIdx = vm.cmdHistory.length;
-						/** @type {string} */
-						vm.command = "";
-					});
+			function CommandCtrl($scope, DataService) {
+				/**
+				 * @return {undefined}
+				 */
+				function activate() {
+					DataService.registerOutput(vm);
 				}
-			}
-			/**
-			 * @param {!Event} params
-			 * @return {?}
-			 */
-			function handleKeyDown(params) {
-				var c = params.keyCode;
-				return 38 != c && 40 != c || (38 == c && vm.cmdHistory.length > 0 && vm.cmdHistoryIdx > 0 ? vm.cmdHistoryIdx-- : 40 == c && vm.cmdHistoryIdx < vm.cmdHistory.length - 1 && vm.cmdHistoryIdx++ , vm.cmdHistoryIdx >= 0 && vm.cmdHistoryIdx < vm.cmdHistory.length && (vm.command = vm.cmdHistory[vm.cmdHistoryIdx]), false);
-			}
-			/**
-			 * @param {!Event} event
-			 * @return {?}
-			 */
-			function handleKeyUp(event) {
-				return 13 == event.keyCode && vm.sendCommand(), true;
-			}
-			/**
-			 * @return {undefined}
-			 */
-			function clear() {
-				/** @type {!Array} */
-				vm.log = [];
-				vm.updateOutput();
-			}
-			/**
-			 * @return {undefined}
-			 */
-			function onFilterChange() {
-				vm.updateOutput();
-			}
-			/**
-			 * @param {string} message
-			 * @return {undefined}
-			 */
-			function updateOutput(message) {
-				if (!vm.log) {
+				/**
+				 * @return {undefined}
+				 */
+				function sendCommand() {
+					if (vm.command) {
+						console.log("Command: " + vm.command);
+						DataService.runCommand(vm.command).then(function (result_data) {
+							vm.updateOutput(result_data);
+							vm.cmdHistory.push(vm.command);
+							vm.cmdHistory.slice(-300);
+							vm.cmdHistoryIdx = vm.cmdHistory.length;
+							/** @type {string} */
+							vm.command = "";
+						});
+					}
+				}
+				/**
+				 * @param {!Event} params
+				 * @return {?}
+				 */
+				function handleKeyDown(params) {
+					var c = params.keyCode;
+					return 38 != c && 40 != c || (38 == c && vm.cmdHistory.length > 0 && vm.cmdHistoryIdx > 0 ? vm.cmdHistoryIdx-- : 40 == c && vm.cmdHistoryIdx < vm.cmdHistory.length - 1 && vm.cmdHistoryIdx++ , vm.cmdHistoryIdx >= 0 && vm.cmdHistoryIdx < vm.cmdHistory.length && (vm.command = vm.cmdHistory[vm.cmdHistoryIdx]), false);
+				}
+				/**
+				 * @param {!Event} event
+				 * @return {?}
+				 */
+				function handleKeyUp(event) {
+					return 13 == event.keyCode && vm.sendCommand(), true;
+				}
+				/**
+				 * @return {undefined}
+				 */
+				function clear() {
 					/** @type {!Array} */
 					vm.log = [];
+					vm.updateOutput();
 				}
-				if (message) {
-					vm.log = vm.log.concat(message);
-					vm.log = vm.log.slice(-300);
+				/**
+				 * @return {undefined}
+				 */
+				function onFilterChange() {
+					vm.updateOutput();
 				}
-				/** @type {!RegExp} */
-				var regex = /ok T:/g;
-				/** @type {string} */
-				var output = "";
-				var patchLen = vm.log.length;
-				/** @type {number} */
-				var i = 0;
-				for (; i < patchLen; i++) {
-					if (!(vm.filterOutput && vm.log[i].match(regex))) {
-						output = output + vm.log[i];
+				/**
+				 * @param {string} message
+				 * @return {undefined}
+				 */
+				function updateOutput(message) {
+					if (!vm.log) {
+						/** @type {!Array} */
+						vm.log = [];
 					}
+					if (message) {
+						vm.log = vm.log.concat(message);
+						vm.log = vm.log.slice(-300);
+					}
+					/** @type {!RegExp} */
+					var regex = /ok T:/g;
+					/** @type {string} */
+					var output = "";
+					var patchLen = vm.log.length;
+					/** @type {number} */
+					var i = 0;
+					for (; i < patchLen; i++) {
+						if (!(vm.filterOutput && vm.log[i].match(regex))) {
+							output = output + vm.log[i];
+						}
+					}
+					vm.commandOutput = output;
 				}
-				vm.commandOutput = output;
-			}
-			function resumePrint() {
-				console.log("Resuming Print");
-				DataService.runCommand("resume").then(function (result_data) {
-					vm.updateOutput(result_data);
-					vm.cmdHistory.push("resume");
-					vm.cmdHistory.slice(-300);
-					vm.cmdHistoryIdx = vm.cmdHistory.length;
-				});
-			}
-			function suspendPrint() {
-				console.log("Suspending Print");
-				DataService.runCommand("suspend").then(function (result_data) {
-					vm.updateOutput(result_data);
-					vm.cmdHistory.push("suspend");
-					vm.cmdHistory.slice(-300);
-					vm.cmdHistoryIdx = vm.cmdHistory.length;
-				});
-			}
+				function resumePrint() {
+					console.log("Resuming Print");
+					DataService.runCommand("resume").then(function (result_data) {
+						vm.updateOutput(result_data);
+						vm.cmdHistory.push("resume");
+						vm.cmdHistory.slice(-300);
+						vm.cmdHistoryIdx = vm.cmdHistory.length;
+					});
+				}
+				function suspendPrint() {
+					console.log("Suspending Print");
+					DataService.runCommand("suspend").then(function (result_data) {
+						vm.updateOutput(result_data);
+						vm.cmdHistory.push("suspend");
+						vm.cmdHistory.slice(-300);
+						vm.cmdHistoryIdx = vm.cmdHistory.length;
+					});
+				}
 
-			var vm = this;
-			/** @type {!Array} */
-			vm.log = [];
-			/** @type {string} */
-			vm.command = "";
-			/** @type {string} */
-			vm.commandOutput = "";
-			/** @type {!Array} */
-			vm.cmdHistory = [];
-			/** @type {number} */
-			vm.cmdHistoryIdx = -1;
-			/** @type {boolean} */
-			vm.autoscrollEnabled = true;
-			/** @type {boolean} */
-			vm.filterOutput = false;
-			/** @type {function(): undefined} */
-			vm.sendCommand = sendCommand;
-			/** @type {function(!Event): ?} */
-			vm.handleKeyDown = handleKeyDown;
-			/** @type {function(!Event): ?} */
-			vm.handleKeyUp = handleKeyUp;
-			/** @type {function(): undefined} */
-			vm.clear = clear;
-			/** @type {function(): undefined} */
-			vm.onFilterChange = onFilterChange;
-			/** @type {function(string): undefined} */
-			vm.updateOutput = updateOutput;
-
-			vm.resumePrint = resumePrint;
-			vm.suspendPrint = suspendPrint;
-			activate();
-		}
-		angular.module("smoothieApp").controller("CommandCtrl", CommandCtrl);
-		/** @type {!Array} */
-		CommandCtrl.$inject = ["$scope", "DataService"];
-	}()
-	//**** File uploading***//
-	, function () {
-		/**
-		 * @param {?} DataService
-		 * @param {!Object} Upload
-		 * @return {undefined}
-		 */
-		function FileCtrl(DataService, Upload) {
-			/**
-			 * @return {undefined}
-			 */
-			function activate() {
-				refreshFiles();
-			}
-			/**
-			 * @return {undefined}
-			 */
-			function refreshFiles() {
-				console.log("RefreshFiles");
-				DataService.runCommand("M20").then(function (result_data) {
-					parseFilelist(result_data);
-				}, function (xhr) {
-					console.error(xhr.statusText);
-				});
-			}
-			/**
-			 * @param {string} rawdata
-			 * @return {undefined}
-			 */
-			function parseFilelist(rawdata) {
+				var vm = this;
 				/** @type {!Array} */
-				vm.fileList = [];
-				var zakoni = rawdata.split("\n");
-				angular.forEach(zakoni, function (path, canCreateDiscussions) {
-					if (path = path.trim(), path.match(/\.g(code)?$/)) {
-						var file = {
-							filename: path,
-							uploading: false,
+				vm.log = [];
+				/** @type {string} */
+				vm.command = "";
+				/** @type {string} */
+				vm.commandOutput = "";
+				/** @type {!Array} */
+				vm.cmdHistory = [];
+				/** @type {number} */
+				vm.cmdHistoryIdx = -1;
+				/** @type {boolean} */
+				vm.autoscrollEnabled = true;
+				/** @type {boolean} */
+				vm.filterOutput = false;
+				/** @type {function(): undefined} */
+				vm.sendCommand = sendCommand;
+				/** @type {function(!Event): ?} */
+				vm.handleKeyDown = handleKeyDown;
+				/** @type {function(!Event): ?} */
+				vm.handleKeyUp = handleKeyUp;
+				/** @type {function(): undefined} */
+				vm.clear = clear;
+				/** @type {function(): undefined} */
+				vm.onFilterChange = onFilterChange;
+				/** @type {function(string): undefined} */
+				vm.updateOutput = updateOutput;
+
+				vm.resumePrint = resumePrint;
+				vm.suspendPrint = suspendPrint;
+				activate();
+			}
+			angular.module("smoothieApp").controller("CommandCtrl", CommandCtrl);
+			/** @type {!Array} */
+			CommandCtrl.$inject = ["$scope", "DataService"];
+		}()
+		//**** File uploading***//
+		, function () {
+			/**
+			 * @param {?} DataService
+			 * @param {!Object} Upload
+			 * @return {undefined}
+			 */
+			function FileCtrl(DataService, Upload) {
+				/**
+				 * @return {undefined}
+				 */
+				function activate() {
+					refreshFiles();
+				}
+				/**
+				 * @return {undefined}
+				 */
+				function refreshFiles() {
+					console.log("RefreshFiles");
+					DataService.runCommand("M20").then(function (result_data) {
+						parseFilelist(result_data);
+					}, function (xhr) {
+						console.error(xhr.statusText);
+					});
+				}
+				/**
+				 * @param {string} rawdata
+				 * @return {undefined}
+				 */
+				function parseFilelist(rawdata) {
+					/** @type {!Array} */
+					vm.fileList = [];
+					var zakoni = rawdata.split("\n");
+					angular.forEach(zakoni, function (path, canCreateDiscussions) {
+						if (path = path.trim(), path.match(/\.g(code)?$/)) {
+							var file = {
+								filename: path,
+								uploading: false,
+								percentage: 0
+							};
+							vm.fileList.push(file);
+						}
+					});
+				}
+				/**
+				 * @param {string} file
+				 * @return {undefined}
+				 */
+				function print(file) {
+					console.log("print file - " + file);
+					DataService.runCommand("play /sd/" + file).then(function (spofHosts) {
+						console.log("Result: " + spofHosts);
+					});
+				}
+				/**
+				 * @return {undefined}
+				 */
+				function progress() {
+					DataService.runCommand("progress").then(function (result_data) {
+						DataService.broadcastCommand(result_data);
+					}, function (xhr) {
+						console.error(xhr.statusText);
+					});
+				}
+				/**
+				 * @return {undefined}
+				 */
+				function abort() {
+					DataService.runCommand("abort").then(function (result_data) {
+						DataService.broadcastCommand(result_data);
+					}, function (xhr) {
+						console.error(xhr.statusText);
+					});
+				}
+				/**
+				 * @param {!Object} file
+				 * @return {undefined}
+				 */
+				function uploadFile(file) {
+					if (file) {
+						/**@type{string}*/
+						var a = file.name;
+						var sendingName = file.name
+						if (a.includes(" ")) {
+							DataService.broadcastCommand("Spaces changed to _'s \n");
+							sendingName = a.replace(/( )/g, "_")
+						}
+
+						DataService.broadcastCommand("Uploading: " + sendingName + "\n");
+						vm.currentUploadedFile = {
+							filename: sendingName,
+							uploading: true,
 							percentage: 0
 						};
-						vm.fileList.push(file);
+						vm.fileList.push(vm.currentUploadedFile);
+						Upload.http({
+							url: "/upload",
+							headers: {
+								"X-Filename": sendingName
+							},
+							data: file
+						}).then(function (canCreateDiscussions) {
+							DataService.broadcastCommand("Upload successful.\n");
+							/** @type {boolean} */
+							vm.currentUploadedFile.uploading = false;
+							vm.refreshFiles();
+						}, function (testsStatus) {
+							DataService.broadcastCommand("Error status: " + testsStatus.status + "\n");
+						}, function (evt2) {
+							/** @type {number} */
+							var to = parseInt(100 * evt2.loaded / evt2.total);
+							/** @type {number} */
+							vm.currentUploadedFile.percentage = to;
+							console.log("Progress: " + to + "%");
+						});
 					}
-				});
-			}
-			/**
-			 * @param {string} file
-			 * @return {undefined}
-			 */
-			function print(file) {
-				console.log("print file - " + file);
-				DataService.runCommand("play /sd/" + file).then(function (spofHosts) {
-					console.log("Result: " + spofHosts);
-				});
-			}
-			/**
-			 * @return {undefined}
-			 */
-			function progress() {
-				DataService.runCommand("progress").then(function (result_data) {
-					DataService.broadcastCommand(result_data);
-				}, function (xhr) {
-					console.error(xhr.statusText);
-				});
-			}
-			/**
-			 * @return {undefined}
-			 */
-			function abort() {
-				DataService.runCommand("abort").then(function (result_data) {
-					DataService.broadcastCommand(result_data);
-				}, function (xhr) {
-					console.error(xhr.statusText);
-				});
-			}
-			/**
-			 * @param {!Object} file
-			 * @return {undefined}
-			 */
-			function uploadFile(file) {
-				if (file) {
-					DataService.broadcastCommand("Uploading: " + file.name + "\n");
-					vm.currentUploadedFile = {
-						filename: file.name,
-						uploading: true,
-						percentage: 0
-					};
-					vm.fileList.push(vm.currentUploadedFile);
-					Upload.http({
-						url: "/upload",
-						headers: {
-							"X-Filename": file.name
-						},
-						data: file
-					}).then(function (canCreateDiscussions) {
-						DataService.broadcastCommand("Upload successful.\n");
-						/** @type {boolean} */
-						vm.currentUploadedFile.uploading = false;
+				}
+				/**
+				 * @param {!Node} event
+				 * @return {undefined}
+				 */
+				function deleteFile(event) {
+					DataService.runCommand("M30 " + event.filename).then(function (canCreateDiscussions) {
+						DataService.broadcastCommand("Deleted file: " + event.filename + "\n");
 						vm.refreshFiles();
-					}, function (testsStatus) {
-						DataService.broadcastCommand("Error status: " + testsStatus.status + "\n");
-					}, function (evt2) {
-						/** @type {number} */
-						var to = parseInt(100 * evt2.loaded / evt2.total);
-						/** @type {number} */
-						vm.currentUploadedFile.percentage = to;
-						console.log("Progress: " + to + "%");
+					}, function (xhr) {
+						console.error(xhr.statusText);
 					});
 				}
-			}
-			/**
-			 * @param {!Node} event
-			 * @return {undefined}
-			 */
-			function deleteFile(event) {
-				DataService.runCommand("M30 " + event.filename).then(function (canCreateDiscussions) {
-					DataService.broadcastCommand("Deleted file: " + event.filename + "\n");
-					vm.refreshFiles();
-				}, function (xhr) {
-					console.error(xhr.statusText);
-				});
-			}
-			var vm = this;
-			/** @type {!Array} */
-			vm.fileList = [];
-			vm.currentUploadedFile = {};
-			/** @type {function(): undefined} */
-			vm.refreshFiles = refreshFiles;
-			/** @type {function(string): undefined} */
-			vm.print = print;
-			/** @type {function(): undefined} */
-			vm.progress = progress;
-			/** @type {function(): undefined} */
-			vm.abort = abort;
-			/** @type {function(!Object): undefined} */
-			vm.uploadFile = uploadFile;
-			/** @type {function(!Node): undefined} */
-			vm.deleteFile = deleteFile;
-			activate();
-		}
-		angular.module("smoothieApp").controller("FileCtrl", FileCtrl);
-		/** @type {!Array} */
-		FileCtrl.$inject = ["DataService", "Upload"];
-	}(),
-
-	//**************this seciotn controls the printer name and general header stuff**/////
-	 function () {
-		/**
-		 * @param {?} gettextCatalog
-		 * @param {!Object} localStorageService
-		 * @return {undefined}
-		 */
-		function HeaderCtrl(gettextCatalog, localStorageService) {
-			/**
-			 * @param {string} lang
-			 * @return {undefined}
-			 */
-			function setLanguage(lang) {
-				/** @type {string} */
-				vm.languages.current = lang;
-				gettextCatalog.setCurrentLanguage(lang);
-				localStorageService.set("currentLanguage", vm.languages.current);
-			}
-			/**
-			 * @return {undefined}
-			 */
-			function updatePrinterName() {
-				localStorageService.set("printerName", vm.printerName);
-			}
-			var vm = this;
-			vm.printerName = localStorageService.get("printerName") || "Your printer name";
-			vm.languages = {
-				current: gettextCatalog.currentLanguage,
-				available: {
-					en: "English",
-					pl: "Polski"
-				}
-			};
-			/** @type {function(string): undefined} */
-			vm.setLanguage = setLanguage;
-			/** @type {function(): undefined} */
-			vm.updatePrinterName = updatePrinterName;
-		}
-		angular.module("smoothieApp").controller("HeaderCtrl", HeaderCtrl);
-		/** @type {!Array} */
-		HeaderCtrl.$inject = ["gettextCatalog", "localStorageService"];
-	}(),
-	//****** this secntion should control IO**//
-	function () {
-		/**
-		 * @param {!Object} $http
-		 * @param {!Object} localStorageService
-		 * @return {?}
-		 */
-		function DataService($http, localStorageService) {
-			/**
-			 * @param {string} cmd
-			 * @return {?}
-			 */
-			function runCommand(cmd) {
-				return cmd = cmd + "\n", $http.post(url, cmd).then(function (simpleselect) {
-					return simpleselect.data;
-				});
-			}
-			/**
-			 * @param {?} out
-			 * @return {undefined}
-			 */
-			function registerOutput(out) {
-				output.push(out);
-			}
-			/**
-			 * @param {string} msg
-			 * @return {undefined}
-			 */
-			function broadcastCommand(msg) {
-				/** @type {number} */
-				var index = 0;
-				for (; index < output.length; ++index) {
-					output[index].updateOutput(msg);
-				}
-			}
-			/**
-			 * @return {?}
-			 */
-			function secondExtruderState() {
-				return extruderState;
-			}
-			/**
-			 * @return {undefined}
-			 */
-			function updateSecondExtruder() {
-				localStorageService.set("secondExtruderSupportEnabled", extruderState.supportEnabled ? "true" : "false");
-			}
-			/** @type {string} */
-			var url = "/command";
-			var extruderState = {
-				supportEnabled: "true" == localStorageService.get("secondExtruderSupportEnabled")
-			};
-			/** @type {!Array} */
-			var output = [];
-			var service = {
-				runCommand: runCommand,
-				registerOutput: registerOutput,
-				broadcastCommand: broadcastCommand,
-				secondExtruderState: secondExtruderState,
-				updateSecondExtruder: updateSecondExtruder
-			};
-			return service;
-		}
-		angular.module("smoothieApp").factory("DataService", DataService);
-		/** @type {!Array} */
-		DataService.$inject = ["$http", "localStorageService"];
-	}(),
-	//*******************************************//
-	// Here ends the content relating to the smoothie, should just be stuff to do wirth angular and dispalying etc
-	//
-	//*******************************************//
-	function (angular, undefined) {
-		/**
-		 * @param {?} $parse
-		 * @param {string} attr
-		 * @param {!Object} scope
-		 * @return {?}
-		 */
-		function createActivationState($parse, attr, scope) {
-			/**
-			 * @param {boolean} initValue
-			 * @return {?}
-			 */
-			function unboundState(initValue) {
-				/** @type {boolean} */
-				var activated = initValue;
-				return {
-					getValue: function () {
-						return activated;
-					},
-					setValue: function (value) {
-						activated = value;
-					}
-				};
-			}
-			/**
-			 * @param {?} getter
-			 * @param {!Object} scope
-			 * @return {?}
-			 */
-			function oneWayBindingState(getter, scope) {
-				return {
-					getValue: function () {
-						return getter(scope);
-					},
-					setValue: function () {
-					}
-				};
-			}
-			/**
-			 * @param {?} getter
-			 * @param {?} setter
-			 * @param {!Object} scope
-			 * @return {?}
-			 */
-			function twoWayBindingState(getter, setter, scope) {
-				return {
-					getValue: function () {
-						return getter(scope);
-					},
-					setValue: function (value) {
-						if (value !== getter(scope)) {
-							scope.$apply(function () {
-								setter(scope, value);
-							});
-						}
-					}
-				};
-			}
-			if ("" !== attr) {
-				var getter = $parse(attr);
-				return getter.assign !== undefined ? twoWayBindingState(getter, getter.assign, scope) : oneWayBindingState(getter, scope);
-			}
-			return unboundState(true);
-		}
-		/**
-		 * @param {?} module
-		 * @param {string} attrName
-		 * @param {!Object} direction
-		 * @return {undefined}
-		 */
-		function createDirective(module, attrName, direction) {
-			module.directive(attrName, ["$parse", "$window", "$timeout", function ($parse, $window, $timeout) {
-				return {
-					priority: 1,
-					restrict: "A",
-					link: function (scope, element, attrs) {
-						/**
-						 * @return {undefined}
-						 */
-						function scrollIfGlued() {
-							if (activationState.getValue() && !direction.isAttached(el)) {
-								direction.scroll(el);
-							}
-						}
-						/**
-						 * @return {undefined}
-						 */
-						function onScroll() {
-							activationState.setValue(direction.isAttached(el));
-						}
-						var el = element[0];
-						var activationState = createActivationState($parse, attrs[attrName], scope);
-						scope.$watch(scrollIfGlued);
-						$timeout(scrollIfGlued, 0, false);
-						$window.addEventListener("resize", scrollIfGlued, false);
-						element.bind("scroll", onScroll);
-						element.on("$destroy", function () {
-							element.unbind("scroll", onScroll);
-						});
-						scope.$on("$destroy", function () {
-							$window.removeEventListener("resize", scrollIfGlued, false);
-						});
-					}
-				};
-			}]);
-		}
-		var right = {
-			isAttached: function (el) {
-				return el.scrollTop + el.clientHeight + 1 >= el.scrollHeight;
-			},
-			scroll: function (element) {
-				element.scrollTop = element.scrollHeight;
-			}
-		};
-		var bottom = {
-			isAttached: function (el) {
-				return el.scrollTop <= 1;
-			},
-			scroll: function (p) {
-				/** @type {number} */
-				p.scrollTop = 0;
-			}
-		};
-		var top = {
-			isAttached: function (el) {
-				return el.scrollLeft + el.clientWidth + 1 >= el.scrollWidth;
-			},
-			scroll: function (data) {
-				data.scrollLeft = data.scrollWidth;
-			}
-		};
-		var left = {
-			isAttached: function (el) {
-				return el.scrollLeft <= 1;
-			},
-			scroll: function (p) {
-				/** @type {number} */
-				p.scrollLeft = 0;
-			}
-		};
-		var module = angular.module("luegg.directives", []);
-		createDirective(module, "scrollGlue", right);
-		createDirective(module, "scrollGlueTop", bottom);
-		createDirective(module, "scrollGlueBottom", right);
-		createDirective(module, "scrollGlueLeft", left);
-		createDirective(module, "scrollGlueRight", top);
-	}(angular), !function (factory) {
-		if ("object" == typeof exports) {
-			module.exports = factory("undefined" != typeof angular ? angular : require("angular"), "undefined" != typeof Chart ? Chart : require("chart.js"));
-		} else {
-			if ("function" == typeof define && define.amd) {
-				define(["angular", "chart"], factory);
-			} else {
-				if ("undefined" == typeof angular || "undefined" == typeof Chart) {
-					throw new Error("Chart.js library needs to included, see http://jtblin.github.io/angular-chart.js/");
-				}
-				factory(angular, Chart);
-			}
-		}
-	}(function (angular, Chart) {
-		/**
-		 * @return {undefined}
-		 */
-		function ChartJsProvider() {
-			var options = {
-				responsive: true
-			};
-			var ChartJs = {
-				Chart: Chart,
-				getOptions: function (type) {
-					var blockElements = type && options[type] || {};
-					return angular.extend({}, options, blockElements);
-				}
-			};
-			/**
-			 * @param {string} type
-			 * @param {string} customOptions
-			 * @return {?}
-			 */
-			this.setOptions = function (type, customOptions) {
-				return customOptions ? void (options[type] = angular.extend(options[type] || {}, customOptions)) : (customOptions = type, void (options = angular.extend(options, customOptions)));
-			};
-			/**
-			 * @return {?}
-			 */
-			this.$get = function () {
-				return ChartJs;
-			};
-		}
-		/**
-		 * @param {?} ChartJs
-		 * @param {?} $timeout
-		 * @return {?}
-		 */
-		function ChartJsFactory(ChartJs, $timeout) {
-			/**
-			 * @param {!Object} type
-			 * @param {!Object} scope
-			 * @param {!Object} elem
-			 * @return {undefined}
-			 */
-			function createChart(type, scope, elem) {
-				var options = getChartOptions(type, scope);
-				if (hasData(scope) && canDisplay(type, scope, elem, options)) {
-					var el = elem[0];
-					var ctx = el.getContext("2d");
-					scope.chartGetColor = getChartColorFn(scope);
-					var data = getChartData(type, scope);
-					destroyChart(scope);
-					scope.chart = new ChartJs.Chart(ctx, {
-						type: type,
-						data: data,
-						options: options
-					});
-					scope.$emit("chart-create", scope.chart);
-					bindEvents(el, scope);
-				}
-			}
-			/**
-			 * @param {!Object} newVal
-			 * @param {!Object} oldVal
-			 * @return {?}
-			 */
-			function canUpdateChart(newVal, oldVal) {
-				return !!(newVal && oldVal && newVal.length && oldVal.length) && (Array.isArray(newVal[0]) ? newVal.length === oldVal.length && newVal.every(function (progressiveData, name) {
-					return progressiveData.length === oldVal[name].length;
-				}) : oldVal.reduce(sum, 0) > 0 && newVal.length === oldVal.length);
-			}
-			/**
-			 * @param {(Object|number)} rowGroupKey
-			 * @param {!Object} colGroupKey
-			 * @return {?}
-			 */
-			function sum(rowGroupKey, colGroupKey) {
-				return rowGroupKey + colGroupKey;
-			}
-			/**
-			 * @param {!Object} scope
-			 * @param {string} action
-			 * @param {boolean} triggerOnlyOnChange
-			 * @return {?}
-			 */
-			function getEventHandler(scope, action, triggerOnlyOnChange) {
-				/** @type {null} */
-				var lastState = null;
-				return function (evt) {
-					var atEvents = scope.chart.getElementsAtEvent || scope.chart.getPointsAtEvent;
-					if (atEvents) {
-						var activePoints = atEvents.call(scope.chart, evt);
-						if (!(triggerOnlyOnChange !== false && angular.equals(lastState, activePoints) !== false)) {
-							lastState = activePoints;
-							scope[action](activePoints, evt);
-						}
-					}
-				};
-			}
-			/**
-			 * @param {string} type
-			 * @param {!Object} scope
-			 * @return {?}
-			 */
-			function getColors(type, scope) {
-				var colors = angular.copy(scope.chartColors || ChartJs.getOptions(type).chartColors || Chart.defaults.global.colors);
-				/** @type {boolean} */
-				var c = colors.length < scope.chartData.length;
-				for (; colors.length < scope.chartData.length;) {
-					colors.push(scope.chartGetColor());
-				}
-				return c && (scope.chartColors = colors), colors.map(convertColor);
-			}
-			/**
-			 * @param {number} a
-			 * @return {?}
-			 */
-			function convertColor(a) {
-				return "object" == typeof a && null !== a ? a : "string" == typeof a && "#" === a[0] ? getColor(hexToRgb(a.substr(1))) : getRandomColor();
-			}
-			/**
-			 * @return {?}
-			 */
-			function getRandomColor() {
+				var vm = this;
 				/** @type {!Array} */
-				var color = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255)];
-				return getColor(color);
+				vm.fileList = [];
+				vm.currentUploadedFile = {};
+				/** @type {function(): undefined} */
+				vm.refreshFiles = refreshFiles;
+				/** @type {function(string): undefined} */
+				vm.print = print;
+				/** @type {function(): undefined} */
+				vm.progress = progress;
+				/** @type {function(): undefined} */
+				vm.abort = abort;
+				/** @type {function(!Object): undefined} */
+				vm.uploadFile = uploadFile;
+				/** @type {function(!Node): undefined} */
+				vm.deleteFile = deleteFile;
+				activate();
 			}
+			angular.module("smoothieApp").controller("FileCtrl", FileCtrl);
+			/** @type {!Array} */
+			FileCtrl.$inject = ["DataService", "Upload"];
+		}(),
+
+		//**************this seciotn controls the printer name and general header stuff**/////
+		function () {
 			/**
-			 * @param {!Array} color
-			 * @return {?}
-			 */
-			function getColor(color) {
-				return {
-					backgroundColor: rgba(color, .2),
-					pointBackgroundColor: rgba(color, 1),
-					pointHoverBackgroundColor: rgba(color, .8),
-					borderColor: rgba(color, 1),
-					pointBorderColor: "#fff",
-					pointHoverBorderColor: rgba(color, 1)
-				};
-			}
-			/**
-			 * @param {number} min
-			 * @param {number} max
-			 * @return {?}
-			 */
-			function getRandomInt(min, max) {
-				return Math.floor(Math.random() * (max - min + 1)) + min;
-			}
-			/**
-			 * @param {!Array} color
-			 * @param {number} alpha
-			 * @return {?}
-			 */
-			function rgba(color, alpha) {
-				return o ? "rgb(" + color.join(",") + ")" : "rgba(" + color.concat(alpha).join(",") + ")";
-			}
-			/**
-			 * @param {string} byte1
-			 * @return {?}
-			 */
-			function hexToRgb(byte1) {
-				/** @type {number} */
-				var firstByte = parseInt(byte1, 16);
-				/** @type {number} */
-				var r = firstByte >> 16 & 255;
-				/** @type {number} */
-				var n = firstByte >> 8 & 255;
-				/** @type {number} */
-				var totalCCs = 255 & firstByte;
-				return [r, n, totalCCs];
-			}
-			/**
-			 * @param {!Object} scope
-			 * @return {?}
-			 */
-			function hasData(scope) {
-				return scope.chartData && scope.chartData.length;
-			}
-			/**
-			 * @param {!Object} scope
-			 * @return {?}
-			 */
-			function getChartColorFn(scope) {
-				return "function" == typeof scope.chartGetColor ? scope.chartGetColor : getRandomColor;
-			}
-			/**
-			 * @param {boolean} type
-			 * @param {!Object} scope
-			 * @return {?}
-			 */
-			function getChartData(type, scope) {
-				var colors = getColors(type, scope);
-				return Array.isArray(scope.chartData[0]) ? getDataSets(scope.chartLabels, scope.chartData, scope.chartSeries || [], colors, scope.chartDatasetOverride) : getData(scope.chartLabels, scope.chartData, colors, scope.chartDatasetOverride);
-			}
-			/**
-			 * @param {!Object} labels
-			 * @param {?} series
-			 * @param {!Object} data
-			 * @param {!Object} colors
-			 * @param {string} datasetOverride
-			 * @return {?}
-			 */
-			function getDataSets(labels, series, data, colors, datasetOverride) {
-				return {
-					labels: labels,
-					datasets: series.map(function (instancesTypes, i) {
-						var c = angular.extend({}, colors[i], {
-							label: data[i],
-							data: instancesTypes
-						});
-						return datasetOverride && datasetOverride.length >= i && angular.merge(c, datasetOverride[i]), c;
-					})
-				};
-			}
-			/**
-			 * @param {!Object} id
-			 * @param {string} instruction
-			 * @param {?} text
-			 * @param {?} args
-			 * @return {?}
-			 */
-			function getData(id, instruction, text, args) {
-				var parsedData = {
-					labels: id,
-					datasets: [{
-						data: instruction,
-						backgroundColor: text.map(function (color) {
-							return color.pointBackgroundColor;
-						}),
-						hoverBackgroundColor: text.map(function (viewerConfig) {
-							return viewerConfig.backgroundColor;
-						})
-					}]
-				};
-				return args && angular.merge(parsedData.datasets[0], args), parsedData;
-			}
-			/**
-			 * @param {boolean} type
-			 * @param {!Object} scope
-			 * @return {?}
-			 */
-			function getChartOptions(type, scope) {
-				return angular.extend({}, ChartJs.getOptions(type), scope.chartOptions);
-			}
-			/**
-			 * @param {!Element} el
-			 * @param {!Object} scope
+			 * @param {?} gettextCatalog
+			 * @param {!Object} localStorageService
 			 * @return {undefined}
 			 */
-			function bindEvents(el, scope) {
-				el.onclick = scope.chartClick ? getEventHandler(scope, "chartClick", false) : angular.noop;
-				el.onmousemove = scope.chartHover ? getEventHandler(scope, "chartHover", true) : angular.noop;
-			}
-			/**
-			 * @param {string} values
-			 * @param {!Object} scope
-			 * @return {undefined}
-			 */
-			function updateChart(values, scope) {
-				if (Array.isArray(scope.chartData[0])) {
-					scope.chart.data.datasets.forEach(function (event, id) {
-						event.data = values[id];
-					});
-				} else {
+			function HeaderCtrl(gettextCatalog, localStorageService) {
+				/**
+				 * @param {string} lang
+				 * @return {undefined}
+				 */
+				function setLanguage(lang) {
 					/** @type {string} */
-					scope.chart.data.datasets[0].data = values;
+					vm.languages.current = lang;
+					gettextCatalog.setCurrentLanguage(lang);
+					localStorageService.set("currentLanguage", vm.languages.current);
 				}
-				scope.chart.update();
-				scope.$emit("chart-update", scope.chart);
+				/**
+				 * @return {undefined}
+				 */
+				function updatePrinterName() {
+					localStorageService.set("printerName", vm.printerName);
+				}
+				var vm = this;
+				vm.printerName = localStorageService.get("printerName") || "Your printer name";
+				vm.languages = {
+					current: gettextCatalog.currentLanguage,
+					available: {
+						en: "English",
+						pl: "Polski"
+					}
+				};
+				/** @type {function(string): undefined} */
+				vm.setLanguage = setLanguage;
+				/** @type {function(): undefined} */
+				vm.updatePrinterName = updatePrinterName;
 			}
+			angular.module("smoothieApp").controller("HeaderCtrl", HeaderCtrl);
+			/** @type {!Array} */
+			HeaderCtrl.$inject = ["gettextCatalog", "localStorageService"];
+		}(),
+		//****** this secntion should control IO**//
+		function () {
 			/**
-			 * @param {!NodeList} value
+			 * @param {!Object} $http
+			 * @param {!Object} localStorageService
 			 * @return {?}
 			 */
-			function isEmpty(value) {
-				return !value || Array.isArray(value) && !value.length || "object" == typeof value && !Object.keys(value).length;
+			function DataService($http, localStorageService) {
+				/**
+				 * @param {string} cmd
+				 * @return {?}
+				 */
+				function runCommand(cmd) {
+					return cmd = cmd + "\n", $http.post(url, cmd).then(function (simpleselect) {
+						return simpleselect.data;
+					});
+				}
+				/**
+				 * @param {?} out
+				 * @return {undefined}
+				 */
+				function registerOutput(out) {
+					output.push(out);
+				}
+				/**
+				 * @param {string} msg
+				 * @return {undefined}
+				 */
+				function broadcastCommand(msg) {
+					/** @type {number} */
+					var index = 0;
+					for (; index < output.length; ++index) {
+						output[index].updateOutput(msg);
+					}
+				}
+				/**
+				 * @return {?}
+				 */
+				function secondExtruderState() {
+					return extruderState;
+				}
+				/**
+				 * @return {undefined}
+				 */
+				function updateSecondExtruder() {
+					localStorageService.set("secondExtruderSupportEnabled", extruderState.supportEnabled ? "true" : "false");
+				}
+				/** @type {string} */
+				var url = "/command";
+				var extruderState = {
+					supportEnabled: "true" == localStorageService.get("secondExtruderSupportEnabled")
+				};
+				/** @type {!Array} */
+				var output = [];
+				var service = {
+					runCommand: runCommand,
+					registerOutput: registerOutput,
+					broadcastCommand: broadcastCommand,
+					secondExtruderState: secondExtruderState,
+					updateSecondExtruder: updateSecondExtruder
+				};
+				return service;
 			}
+			angular.module("smoothieApp").factory("DataService", DataService);
+			/** @type {!Array} */
+			DataService.$inject = ["$http", "localStorageService"];
+		}(),
+		//*******************************************//
+		// Here ends the content relating to the smoothie, should just be stuff to do wirth angular and dispalying etc
+		//
+		//*******************************************//
+		function (angular, undefined) {
 			/**
-			 * @param {!Object} type
+			 * @param {?} $parse
+			 * @param {string} attr
 			 * @param {!Object} scope
-			 * @param {!Object} elem
-			 * @param {!Object} options
 			 * @return {?}
 			 */
-			function canDisplay(type, scope, elem, options) {
-				return !options.responsive || 0 !== elem[0].clientHeight || ($timeout(function () {
-					createChart(type, scope, elem);
-				}, 50, false), false);
+			function createActivationState($parse, attr, scope) {
+				/**
+				 * @param {boolean} initValue
+				 * @return {?}
+				 */
+				function unboundState(initValue) {
+					/** @type {boolean} */
+					var activated = initValue;
+					return {
+						getValue: function () {
+							return activated;
+						},
+						setValue: function (value) {
+							activated = value;
+						}
+					};
+				}
+				/**
+				 * @param {?} getter
+				 * @param {!Object} scope
+				 * @return {?}
+				 */
+				function oneWayBindingState(getter, scope) {
+					return {
+						getValue: function () {
+							return getter(scope);
+						},
+						setValue: function () {
+						}
+					};
+				}
+				/**
+				 * @param {?} getter
+				 * @param {?} setter
+				 * @param {!Object} scope
+				 * @return {?}
+				 */
+				function twoWayBindingState(getter, setter, scope) {
+					return {
+						getValue: function () {
+							return getter(scope);
+						},
+						setValue: function (value) {
+							if (value !== getter(scope)) {
+								scope.$apply(function () {
+									setter(scope, value);
+								});
+							}
+						}
+					};
+				}
+				if ("" !== attr) {
+					var getter = $parse(attr);
+					return getter.assign !== undefined ? twoWayBindingState(getter, getter.assign, scope) : oneWayBindingState(getter, scope);
+				}
+				return unboundState(true);
 			}
 			/**
-			 * @param {!Object} scope
+			 * @param {?} module
+			 * @param {string} attrName
+			 * @param {!Object} direction
 			 * @return {undefined}
 			 */
-			function destroyChart(scope) {
-				if (scope.chart) {
-					scope.chart.destroy();
-					scope.$emit("chart-destroy", scope.chart);
-				}
-			}
-			return function (type) {
-				return {
-					restrict: "CA",
-					scope: {
-						chartGetColor: "=?",
-						chartType: "=",
-						chartData: "=?",
-						chartLabels: "=?",
-						chartOptions: "=?",
-						chartSeries: "=?",
-						chartColors: "=?",
-						chartClick: "=?",
-						chartHover: "=?",
-						chartDatasetOverride: "=?"
-					},
-					link: function (scope, elem) {
-						/**
-						 * @param {string} newVal
-						 * @param {!Object} oldVal
-						 * @return {?}
-						 */
-						function watchData(newVal, oldVal) {
-							if (!newVal || !newVal.length || Array.isArray(newVal[0]) && !newVal[0].length) {
-								return void destroyChart(scope);
-							}
-							var chartType = type || scope.chartType;
-							return chartType ? scope.chart && canUpdateChart(newVal, oldVal) ? updateChart(newVal, scope) : void createChart(chartType, scope, elem) : void 0;
-						}
-						/**
-						 * @param {(Node|NodeList|string)} newVal
-						 * @param {?} oldVal
-						 * @return {undefined}
-						 */
-						function resetChart(newVal, oldVal) {
-							if (!isEmpty(newVal) && !angular.equals(newVal, oldVal)) {
-								var chartType = type || scope.chartType;
-								if (chartType) {
-									createChart(chartType, scope, elem);
+			function createDirective(module, attrName, direction) {
+				module.directive(attrName, ["$parse", "$window", "$timeout", function ($parse, $window, $timeout) {
+					return {
+						priority: 1,
+						restrict: "A",
+						link: function (scope, element, attrs) {
+							/**
+							 * @return {undefined}
+							 */
+							function scrollIfGlued() {
+								if (activationState.getValue() && !direction.isAttached(el)) {
+									direction.scroll(el);
 								}
 							}
-						}
-						/**
-						 * @param {!NodeList} type
-						 * @param {?} target
-						 * @return {undefined}
-						 */
-						function update(type, target) {
-							if (!(isEmpty(type) || angular.equals(type, target))) {
-								createChart(type, scope, elem);
+							/**
+							 * @return {undefined}
+							 */
+							function onScroll() {
+								activationState.setValue(direction.isAttached(el));
 							}
+							var el = element[0];
+							var activationState = createActivationState($parse, attrs[attrName], scope);
+							scope.$watch(scrollIfGlued);
+							$timeout(scrollIfGlued, 0, false);
+							$window.addEventListener("resize", scrollIfGlued, false);
+							element.bind("scroll", onScroll);
+							element.on("$destroy", function () {
+								element.unbind("scroll", onScroll);
+							});
+							scope.$on("$destroy", function () {
+								$window.removeEventListener("resize", scrollIfGlued, false);
+							});
 						}
-						if (o) {
-							window.G_vmlCanvasManager.initElement(elem[0]);
-						}
-						scope.$watch("chartData", watchData, true);
-						scope.$watch("chartSeries", resetChart, true);
-						scope.$watch("chartLabels", resetChart, true);
-						scope.$watch("chartOptions", resetChart, true);
-						scope.$watch("chartColors", resetChart, true);
-						scope.$watch("chartDatasetOverride", resetChart, true);
-						scope.$watch("chartType", update, false);
-						scope.$on("$destroy", function () {
-							destroyChart(scope);
-						});
-						scope.$on("$resize", function () {
-							if (scope.chart) {
-								scope.chart.resize();
-							}
-						});
+					};
+				}]);
+			}
+			var right = {
+				isAttached: function (el) {
+					return el.scrollTop + el.clientHeight + 1 >= el.scrollHeight;
+				},
+				scroll: function (element) {
+					element.scrollTop = element.scrollHeight;
+				}
+			};
+			var bottom = {
+				isAttached: function (el) {
+					return el.scrollTop <= 1;
+				},
+				scroll: function (p) {
+					/** @type {number} */
+					p.scrollTop = 0;
+				}
+			};
+			var top = {
+				isAttached: function (el) {
+					return el.scrollLeft + el.clientWidth + 1 >= el.scrollWidth;
+				},
+				scroll: function (data) {
+					data.scrollLeft = data.scrollWidth;
+				}
+			};
+			var left = {
+				isAttached: function (el) {
+					return el.scrollLeft <= 1;
+				},
+				scroll: function (p) {
+					/** @type {number} */
+					p.scrollLeft = 0;
+				}
+			};
+			var module = angular.module("luegg.directives", []);
+			createDirective(module, "scrollGlue", right);
+			createDirective(module, "scrollGlueTop", bottom);
+			createDirective(module, "scrollGlueBottom", right);
+			createDirective(module, "scrollGlueLeft", left);
+			createDirective(module, "scrollGlueRight", top);
+		}(angular), !function (factory) {
+			if ("object" == typeof exports) {
+				module.exports = factory("undefined" != typeof angular ? angular : require("angular"), "undefined" != typeof Chart ? Chart : require("chart.js"));
+			} else {
+				if ("function" == typeof define && define.amd) {
+					define(["angular", "chart"], factory);
+				} else {
+					if ("undefined" == typeof angular || "undefined" == typeof Chart) {
+						throw new Error("Chart.js library needs to included, see http://jtblin.github.io/angular-chart.js/");
+					}
+					factory(angular, Chart);
+				}
+			}
+		}(function (angular, Chart) {
+			/**
+			 * @return {undefined}
+			 */
+			function ChartJsProvider() {
+				var options = {
+					responsive: true
+				};
+				var ChartJs = {
+					Chart: Chart,
+					getOptions: function (type) {
+						var blockElements = type && options[type] || {};
+						return angular.extend({}, options, blockElements);
 					}
 				};
-			};
-		}
-		/** @type {string} */
-		Chart.defaults.global.multiTooltipTemplate = "<%if (datasetLabel){%><%=datasetLabel%>: <%}%><%= value %>";
-		/** @type {string} */
-		Chart.defaults.global.tooltips.mode = "label";
-		/** @type {number} */
-		Chart.defaults.global.elements.line.borderWidth = 2;
-		/** @type {number} */
-		Chart.defaults.global.elements.rectangle.borderWidth = 2;
-		/** @type {boolean} */
-		Chart.defaults.global.legend.display = false;
-		/** @type {!Array} */
-		Chart.defaults.global.colors = ["#97BBCD", "#DCDCDC", "#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"];
-		/** @type {boolean} */
-		var o = "object" == typeof window.G_vmlCanvasManager && null !== window.G_vmlCanvasManager && "function" == typeof window.G_vmlCanvasManager.initElement;
-		return o && (Chart.defaults.global.animation = false), angular.module("chart.js", []).provider("ChartJs", ChartJsProvider).factory("ChartJsFactory", ["ChartJs", "$timeout", ChartJsFactory]).directive("chartBase", ["ChartJsFactory", function (canCreateDiscussions) {
-			return new canCreateDiscussions;
-		}]).directive("chartLine", ["ChartJsFactory", function (ChartJsFactory) {
-			return new ChartJsFactory("line");
-		}]).directive("chartBar", ["ChartJsFactory", function (ChartJsFactory) {
-			return new ChartJsFactory("bar");
-		}]).directive("chartHorizontalBar", ["ChartJsFactory", function (ChartJsFactory) {
-			return new ChartJsFactory("horizontalBar");
-		}]).directive("chartRadar", ["ChartJsFactory", function (ChartJsFactory) {
-			return new ChartJsFactory("radar");
-		}]).directive("chartDoughnut", ["ChartJsFactory", function (ChartJsFactory) {
-			return new ChartJsFactory("doughnut");
-		}]).directive("chartPie", ["ChartJsFactory", function (ChartJsFactory) {
-			return new ChartJsFactory("pie");
-		}]).directive("chartPolarArea", ["ChartJsFactory", function (ChartJsFactory) {
-			return new ChartJsFactory("polarArea");
-		}]).directive("chartBubble", ["ChartJsFactory", function (ChartJsFactory) {
-			return new ChartJsFactory("bubble");
-		}]).name;
-	});
+				/**
+				 * @param {string} type
+				 * @param {string} customOptions
+				 * @return {?}
+				 */
+				this.setOptions = function (type, customOptions) {
+					return customOptions ? void (options[type] = angular.extend(options[type] || {}, customOptions)) : (customOptions = type, void (options = angular.extend(options, customOptions)));
+				};
+				/**
+				 * @return {?}
+				 */
+				this.$get = function () {
+					return ChartJs;
+				};
+			}
+			/**
+			 * @param {?} ChartJs
+			 * @param {?} $timeout
+			 * @return {?}
+			 */
+			function ChartJsFactory(ChartJs, $timeout) {
+				/**
+				 * @param {!Object} type
+				 * @param {!Object} scope
+				 * @param {!Object} elem
+				 * @return {undefined}
+				 */
+				function createChart(type, scope, elem) {
+					var options = getChartOptions(type, scope);
+					if (hasData(scope) && canDisplay(type, scope, elem, options)) {
+						var el = elem[0];
+						var ctx = el.getContext("2d");
+						scope.chartGetColor = getChartColorFn(scope);
+						var data = getChartData(type, scope);
+						destroyChart(scope);
+						scope.chart = new ChartJs.Chart(ctx, {
+							type: type,
+							data: data,
+							options: options
+						});
+						scope.$emit("chart-create", scope.chart);
+						bindEvents(el, scope);
+					}
+				}
+				/**
+				 * @param {!Object} newVal
+				 * @param {!Object} oldVal
+				 * @return {?}
+				 */
+				function canUpdateChart(newVal, oldVal) {
+					return !!(newVal && oldVal && newVal.length && oldVal.length) && (Array.isArray(newVal[0]) ? newVal.length === oldVal.length && newVal.every(function (progressiveData, name) {
+						return progressiveData.length === oldVal[name].length;
+					}) : oldVal.reduce(sum, 0) > 0 && newVal.length === oldVal.length);
+				}
+				/**
+				 * @param {(Object|number)} rowGroupKey
+				 * @param {!Object} colGroupKey
+				 * @return {?}
+				 */
+				function sum(rowGroupKey, colGroupKey) {
+					return rowGroupKey + colGroupKey;
+				}
+				/**
+				 * @param {!Object} scope
+				 * @param {string} action
+				 * @param {boolean} triggerOnlyOnChange
+				 * @return {?}
+				 */
+				function getEventHandler(scope, action, triggerOnlyOnChange) {
+					/** @type {null} */
+					var lastState = null;
+					return function (evt) {
+						var atEvents = scope.chart.getElementsAtEvent || scope.chart.getPointsAtEvent;
+						if (atEvents) {
+							var activePoints = atEvents.call(scope.chart, evt);
+							if (!(triggerOnlyOnChange !== false && angular.equals(lastState, activePoints) !== false)) {
+								lastState = activePoints;
+								scope[action](activePoints, evt);
+							}
+						}
+					};
+				}
+				/**
+				 * @param {string} type
+				 * @param {!Object} scope
+				 * @return {?}
+				 */
+				function getColors(type, scope) {
+					var colors = angular.copy(scope.chartColors || ChartJs.getOptions(type).chartColors || Chart.defaults.global.colors);
+					/** @type {boolean} */
+					var c = colors.length < scope.chartData.length;
+					for (; colors.length < scope.chartData.length;) {
+						colors.push(scope.chartGetColor());
+					}
+					return c && (scope.chartColors = colors), colors.map(convertColor);
+				}
+				/**
+				 * @param {number} a
+				 * @return {?}
+				 */
+				function convertColor(a) {
+					return "object" == typeof a && null !== a ? a : "string" == typeof a && "#" === a[0] ? getColor(hexToRgb(a.substr(1))) : getRandomColor();
+				}
+				/**
+				 * @return {?}
+				 */
+				function getRandomColor() {
+					/** @type {!Array} */
+					var color = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255)];
+					return getColor(color);
+				}
+				/**
+				 * @param {!Array} color
+				 * @return {?}
+				 */
+				function getColor(color) {
+					return {
+						backgroundColor: rgba(color, .2),
+						pointBackgroundColor: rgba(color, 1),
+						pointHoverBackgroundColor: rgba(color, .8),
+						borderColor: rgba(color, 1),
+						pointBorderColor: "#fff",
+						pointHoverBorderColor: rgba(color, 1)
+					};
+				}
+				/**
+				 * @param {number} min
+				 * @param {number} max
+				 * @return {?}
+				 */
+				function getRandomInt(min, max) {
+					return Math.floor(Math.random() * (max - min + 1)) + min;
+				}
+				/**
+				 * @param {!Array} color
+				 * @param {number} alpha
+				 * @return {?}
+				 */
+				function rgba(color, alpha) {
+					return o ? "rgb(" + color.join(",") + ")" : "rgba(" + color.concat(alpha).join(",") + ")";
+				}
+				/**
+				 * @param {string} byte1
+				 * @return {?}
+				 */
+				function hexToRgb(byte1) {
+					/** @type {number} */
+					var firstByte = parseInt(byte1, 16);
+					/** @type {number} */
+					var r = firstByte >> 16 & 255;
+					/** @type {number} */
+					var n = firstByte >> 8 & 255;
+					/** @type {number} */
+					var totalCCs = 255 & firstByte;
+					return [r, n, totalCCs];
+				}
+				/**
+				 * @param {!Object} scope
+				 * @return {?}
+				 */
+				function hasData(scope) {
+					return scope.chartData && scope.chartData.length;
+				}
+				/**
+				 * @param {!Object} scope
+				 * @return {?}
+				 */
+				function getChartColorFn(scope) {
+					return "function" == typeof scope.chartGetColor ? scope.chartGetColor : getRandomColor;
+				}
+				/**
+				 * @param {boolean} type
+				 * @param {!Object} scope
+				 * @return {?}
+				 */
+				function getChartData(type, scope) {
+					var colors = getColors(type, scope);
+					return Array.isArray(scope.chartData[0]) ? getDataSets(scope.chartLabels, scope.chartData, scope.chartSeries || [], colors, scope.chartDatasetOverride) : getData(scope.chartLabels, scope.chartData, colors, scope.chartDatasetOverride);
+				}
+				/**
+				 * @param {!Object} labels
+				 * @param {?} series
+				 * @param {!Object} data
+				 * @param {!Object} colors
+				 * @param {string} datasetOverride
+				 * @return {?}
+				 */
+				function getDataSets(labels, series, data, colors, datasetOverride) {
+					return {
+						labels: labels,
+						datasets: series.map(function (instancesTypes, i) {
+							var c = angular.extend({}, colors[i], {
+								label: data[i],
+								data: instancesTypes
+							});
+							return datasetOverride && datasetOverride.length >= i && angular.merge(c, datasetOverride[i]), c;
+						})
+					};
+				}
+				/**
+				 * @param {!Object} id
+				 * @param {string} instruction
+				 * @param {?} text
+				 * @param {?} args
+				 * @return {?}
+				 */
+				function getData(id, instruction, text, args) {
+					var parsedData = {
+						labels: id,
+						datasets: [{
+							data: instruction,
+							backgroundColor: text.map(function (color) {
+								return color.pointBackgroundColor;
+							}),
+							hoverBackgroundColor: text.map(function (viewerConfig) {
+								return viewerConfig.backgroundColor;
+							})
+						}]
+					};
+					return args && angular.merge(parsedData.datasets[0], args), parsedData;
+				}
+				/**
+				 * @param {boolean} type
+				 * @param {!Object} scope
+				 * @return {?}
+				 */
+				function getChartOptions(type, scope) {
+					return angular.extend({}, ChartJs.getOptions(type), scope.chartOptions);
+				}
+				/**
+				 * @param {!Element} el
+				 * @param {!Object} scope
+				 * @return {undefined}
+				 */
+				function bindEvents(el, scope) {
+					el.onclick = scope.chartClick ? getEventHandler(scope, "chartClick", false) : angular.noop;
+					el.onmousemove = scope.chartHover ? getEventHandler(scope, "chartHover", true) : angular.noop;
+				}
+				/**
+				 * @param {string} values
+				 * @param {!Object} scope
+				 * @return {undefined}
+				 */
+				function updateChart(values, scope) {
+					if (Array.isArray(scope.chartData[0])) {
+						scope.chart.data.datasets.forEach(function (event, id) {
+							event.data = values[id];
+						});
+					} else {
+						/** @type {string} */
+						scope.chart.data.datasets[0].data = values;
+					}
+					scope.chart.update();
+					scope.$emit("chart-update", scope.chart);
+				}
+				/**
+				 * @param {!NodeList} value
+				 * @return {?}
+				 */
+				function isEmpty(value) {
+					return !value || Array.isArray(value) && !value.length || "object" == typeof value && !Object.keys(value).length;
+				}
+				/**
+				 * @param {!Object} type
+				 * @param {!Object} scope
+				 * @param {!Object} elem
+				 * @param {!Object} options
+				 * @return {?}
+				 */
+				function canDisplay(type, scope, elem, options) {
+					return !options.responsive || 0 !== elem[0].clientHeight || ($timeout(function () {
+						createChart(type, scope, elem);
+					}, 50, false), false);
+				}
+				/**
+				 * @param {!Object} scope
+				 * @return {undefined}
+				 */
+				function destroyChart(scope) {
+					if (scope.chart) {
+						scope.chart.destroy();
+						scope.$emit("chart-destroy", scope.chart);
+					}
+				}
+				return function (type) {
+					return {
+						restrict: "CA",
+						scope: {
+							chartGetColor: "=?",
+							chartType: "=",
+							chartData: "=?",
+							chartLabels: "=?",
+							chartOptions: "=?",
+							chartSeries: "=?",
+							chartColors: "=?",
+							chartClick: "=?",
+							chartHover: "=?",
+							chartDatasetOverride: "=?"
+						},
+						link: function (scope, elem) {
+							/**
+							 * @param {string} newVal
+							 * @param {!Object} oldVal
+							 * @return {?}
+							 */
+							function watchData(newVal, oldVal) {
+								if (!newVal || !newVal.length || Array.isArray(newVal[0]) && !newVal[0].length) {
+									return void destroyChart(scope);
+								}
+								var chartType = type || scope.chartType;
+								return chartType ? scope.chart && canUpdateChart(newVal, oldVal) ? updateChart(newVal, scope) : void createChart(chartType, scope, elem) : void 0;
+							}
+							/**
+							 * @param {(Node|NodeList|string)} newVal
+							 * @param {?} oldVal
+							 * @return {undefined}
+							 */
+							function resetChart(newVal, oldVal) {
+								if (!isEmpty(newVal) && !angular.equals(newVal, oldVal)) {
+									var chartType = type || scope.chartType;
+									if (chartType) {
+										createChart(chartType, scope, elem);
+									}
+								}
+							}
+							/**
+							 * @param {!NodeList} type
+							 * @param {?} target
+							 * @return {undefined}
+							 */
+							function update(type, target) {
+								if (!(isEmpty(type) || angular.equals(type, target))) {
+									createChart(type, scope, elem);
+								}
+							}
+							if (o) {
+								window.G_vmlCanvasManager.initElement(elem[0]);
+							}
+							scope.$watch("chartData", watchData, true);
+							scope.$watch("chartSeries", resetChart, true);
+							scope.$watch("chartLabels", resetChart, true);
+							scope.$watch("chartOptions", resetChart, true);
+							scope.$watch("chartColors", resetChart, true);
+							scope.$watch("chartDatasetOverride", resetChart, true);
+							scope.$watch("chartType", update, false);
+							scope.$on("$destroy", function () {
+								destroyChart(scope);
+							});
+							scope.$on("$resize", function () {
+								if (scope.chart) {
+									scope.chart.resize();
+								}
+							});
+						}
+					};
+				};
+			}
+			/** @type {string} */
+			Chart.defaults.global.multiTooltipTemplate = "<%if (datasetLabel){%><%=datasetLabel%>: <%}%><%= value %>";
+			/** @type {string} */
+			Chart.defaults.global.tooltips.mode = "label";
+			/** @type {number} */
+			Chart.defaults.global.elements.line.borderWidth = 2;
+			/** @type {number} */
+			Chart.defaults.global.elements.rectangle.borderWidth = 2;
+			/** @type {boolean} */
+			Chart.defaults.global.legend.display = false;
+			/** @type {!Array} */
+			Chart.defaults.global.colors = ["#97BBCD", "#DCDCDC", "#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"];
+			/** @type {boolean} */
+			var o = "object" == typeof window.G_vmlCanvasManager && null !== window.G_vmlCanvasManager && "function" == typeof window.G_vmlCanvasManager.initElement;
+			return o && (Chart.defaults.global.animation = false), angular.module("chart.js", []).provider("ChartJs", ChartJsProvider).factory("ChartJsFactory", ["ChartJs", "$timeout", ChartJsFactory]).directive("chartBase", ["ChartJsFactory", function (canCreateDiscussions) {
+				return new canCreateDiscussions;
+			}]).directive("chartLine", ["ChartJsFactory", function (ChartJsFactory) {
+				return new ChartJsFactory("line");
+			}]).directive("chartBar", ["ChartJsFactory", function (ChartJsFactory) {
+				return new ChartJsFactory("bar");
+			}]).directive("chartHorizontalBar", ["ChartJsFactory", function (ChartJsFactory) {
+				return new ChartJsFactory("horizontalBar");
+			}]).directive("chartRadar", ["ChartJsFactory", function (ChartJsFactory) {
+				return new ChartJsFactory("radar");
+			}]).directive("chartDoughnut", ["ChartJsFactory", function (ChartJsFactory) {
+				return new ChartJsFactory("doughnut");
+			}]).directive("chartPie", ["ChartJsFactory", function (ChartJsFactory) {
+				return new ChartJsFactory("pie");
+			}]).directive("chartPolarArea", ["ChartJsFactory", function (ChartJsFactory) {
+				return new ChartJsFactory("polarArea");
+			}]).directive("chartBubble", ["ChartJsFactory", function (ChartJsFactory) {
+				return new ChartJsFactory("bubble");
+			}]).name;
+		});
 
 </script>
 
