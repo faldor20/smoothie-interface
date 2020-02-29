@@ -9,7 +9,7 @@
 		/*!
 angular-xeditable - 0.2.0
 Edit-in-place for angular.js
-Build date: 2016-06-28 
+Build date: 2016-06-28
 */
 		.editable-buttons,
 		.editable-range output {
@@ -1478,7 +1478,7 @@ Build date: 2016-06-28
 					var sendingName = file.name
 					if (a.includes(" ")) {
 						DataService.broadcastCommand("Spaces changed to _'s \n");
-						sendingName = a.replace(" ", "_")
+						sendingName = a.replace(/( )/g, "_")
 					}
 					DataService.broadcastCommand("Uploading: " + sendingName + "\n");
 					vm.currentUploadedFile = {
