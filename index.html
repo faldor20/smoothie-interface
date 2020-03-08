@@ -1805,7 +1805,7 @@ Build date: 2016-06-28
 						var value = result[3] + "\u00b0C";
 						/** @type {string} */
 						value = value + (" | " + result[5] + "\u00b0C");
-						if ("T" == type) {
+						if ("T0" == type||"T"==type) {
 							/** @type {string} */
 							vm.heaterT0ActualTemp = result[3];
 							/** @type {string} */
