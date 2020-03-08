@@ -1,5 +1,5 @@
 
-[] 1. Heater T0 data never shows up next to red/white tick
+[x] 1. Heater T0 data never shows up next to red/white tick
 	it shows the other two. sometimes worked when second extruder was not enabled
 	original code does not have dual extruders but it does work consistently
 
@@ -22,7 +22,7 @@
 [] add indicator for no filiment. and a suspended indicator(disable resume until suspended) "filiment out suspension"
 
 [x]add a at temperature column to extruders and bed (red an green)
-	maybe dont bother now it doesnt need 
+	maybe dont bother now it doesnt need
 
 [] find a way to get information about smoothie status (printing, not printing etc)
 		smoothie appears to have a get command it is only referenced in the example of help output hetre: http://smoothieware.org/console-commands?s[]=get
@@ -34,7 +34,7 @@
 [x] add reminder about filenames not containing spaces after the files
 
 [] find a faster way to do file uploads
-	look at example of file explorer 
+	look at example of file explorer
 	sftp is the suggest way, we are using http
 	look at new web interface
 
