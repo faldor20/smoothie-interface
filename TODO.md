@@ -29,7 +29,7 @@
 		smoothie allso has some info in the network tab about quiries
 
 [x]add back graphs for the temperatures
-	[]test graphs
+	[x]test graphs
 
 [x] add reminder about filenames not containing spaces after the files
 
@@ -37,6 +37,11 @@
 	look at example of file explorer
 	sftp is the suggest way, we are using http
 	look at new web interface
+
+[] make each graph have its controls above it.
+	[] use flexbox so it works
+[] have movement upliad and commands all in one line.
+[] add the swithc to enable and disable filamentout alongside the network.
 
 
 
