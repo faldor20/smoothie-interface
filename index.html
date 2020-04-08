@@ -638,7 +638,13 @@ Build date: 2016-06-28
 									<div class="pull-right"><label><input type="checkbox"
 												data-ng-model="extVM.secondExtruder.supportEnabled"
 												data-ng-change="extVM.onSecondExtruderSupportChange()"> <span
-												translate>enable second extruder</span></label></div>
+												translate>Enable second extruder</span></label></div>
+									<div class="pull-right" style=" margin-right: 10px;"><label></label>
+										<input type="checkbox" data-ng-model="extVM.graphsEnabled.supportEnabled"
+											data-ng-change="extVM.ongGraphsEnabledChange()"> Enable
+										graphs</label>
+
+									</div>
 									<!-- <div class="pull-right"><label><input type="checkbox"
 												data-ng-model="tempVM.autoCheckEnabled"
 												data-ng-change="tempVM.onAutoCheckChange()"> <span translate>auto-check
@@ -683,11 +689,13 @@ Build date: 2016-06-28
 												</tr>
 											</tbody>
 										</table>
-										<canvas id="heaterTempBar" height="140" class="chart chart-line"
-											data-chart-type="line" data-chart-data="tempVM.dataHeater"
-											data-chart-labels="tempVM.labels" data-chart-series="tempVM.seriesHeater"
-											data-chart-options="tempVM.options" data-chart-legend="true"
-											data-chart-colors="tempVM.heaterColours"></canvas>
+										<div data-ng-show="extVM.graphsEnabled.supportEnabled" data-ng-cloak><canvas
+												id="heaterTempBar" height="140" class="chart chart-line"
+												data-chart-type="line" data-chart-data="tempVM.dataHeater"
+												data-chart-labels="tempVM.labels"
+												data-chart-series="tempVM.seriesHeater"
+												data-chart-options="tempVM.options" data-chart-legend="true"
+												data-chart-colors="tempVM.heaterColours"></canvas></div>
 									</div>
 									<div class=" col-lg-4" data-ng-show="tempVM.secondExtruder.supportEnabled"
 										data-ng-cloak>
@@ -720,11 +728,14 @@ Build date: 2016-06-28
 															data-ng-bind="tempVM.heaterT1DisplayTemp"></span></td>
 												</tr>
 											</tbody>
-										</table><canvas id="heaterTempBar" height="140" class="chart chart-line"
-											data-chart-type="line" data-chart-data="tempVM.dataHeater2"
-											data-chart-labels="tempVM.labels" data-chart-series="tempVM.seriesHeater2"
-											data-chart-options="tempVM.options" data-chart-legend="true"
-											data-chart-colors="tempVM.heaterColours"></canvas>
+										</table>
+										<div data-ng-show="extVM.graphsEnabled.supportEnabled" data-ng-cloak><canvas
+												id="heaterTempBar" height="140" class="chart chart-line"
+												data-chart-type="line" data-chart-data="tempVM.dataHeater2"
+												data-chart-labels="tempVM.labels"
+												data-chart-series="tempVM.seriesHeater2"
+												data-chart-options="tempVM.options" data-chart-legend="true"
+												data-chart-colors="tempVM.heaterColours"></canvas></div>
 									</div>
 									<div class="col-lg-3">
 										<table class="table">
@@ -759,10 +770,13 @@ Build date: 2016-06-28
 													</td>
 												</tr>
 											</tbody>
-										</table><canvas id="bedTempBar" height="140" class="chart chart-line"
-											data-chart-data="tempVM.dataBed" data-chart-labels="tempVM.labels"
-											data-chart-series="tempVM.seriesBed" data-chart-options="tempVM.options"
-											data-chart-legend="true" data-chart-colors="tempVM.bedColours"></canvas>
+										</table>
+										<div data-ng-show="extVM.graphsEnabled.supportEnabled" data-ng-cloak><canvas
+												id="bedTempBar" height="140" class="chart chart-line"
+												data-chart-data="tempVM.dataBed" data-chart-labels="tempVM.labels"
+												data-chart-series="tempVM.seriesBed" data-chart-options="tempVM.options"
+												data-chart-legend="true" data-chart-colors="tempVM.bedColours"></canvas>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -1157,10 +1171,12 @@ Build date: 2016-06-28
 											<path class="std" d="M120,220 l17,-17 h-10 v-11 h-14 v11 h-10 z"
 												fill="SteelBlue" /><!-- y neg arrow -->
 											<path class="std" d="M20,120 l17,17 v-10 h11 v-14 h-11 v-10 z"
-												fill="Khaki" /><!-- x neg arrow -->
+												fill="Khaki" />
+											<!-- x neg arrow -->
 											<path class="std" d="M220,120 l-17,-17 v10 h-11 v14 h11 v10 z"
-												fill="Khaki" /><!-- x pos arrow --><text x="113" y="37">+Y</text><text
-												x="113" y="212">-Y</text><text x="27" y="124">-X</text><text x="196"
+												fill="Khaki" />
+											<!-- x pos arrow --><text x="113" y="37">+Y</text><text x="113"
+												y="212">-Y</text><text x="27" y="124">-X</text><text x="196"
 												y="124">+X</text></g>
 									</symbol>
 									<symbol id="PrinterCtl">
@@ -1423,6 +1439,8 @@ Build date: 2016-06-28
 			 */
 			function onSecondExtruderSupportChange() {
 				DataService.updateSecondExtruder();
+			} function onGraphsEnabledChange() {
+				DataService.updateGraphsEnabled();
 			}
 			/**
 			 * @param {string} extruder
@@ -1439,6 +1457,7 @@ Build date: 2016-06-28
 				});
 			}
 			var vm = this;
+			vm.graphEnabled = DataService.graphEnabledState();
 			vm.secondExtruder = DataService.secondExtruderState();
 			/** @type {number} */
 			vm.filamenLength = 5;
@@ -1446,6 +1465,7 @@ Build date: 2016-06-28
 			vm.velocity = 100;
 			/** @type {function(): undefined} */
 			vm.onSecondExtruderSupportChange = onSecondExtruderSupportChange;
+			vm.onGraphsEnabledChange = onGraphsEnabledChange;
 			/** @type {function(string, ?): undefined} */
 			vm.extrude = extrude;
 		}
@@ -2035,10 +2055,24 @@ Build date: 2016-06-28
 			function updateSecondExtruder() {
 				localStorageService.set("secondExtruderSupportEnabled", extruderState.supportEnabled ? "true" : "false");
 			}
+
+			function graphsEnabledState() {
+				return graphEnabledState;
+			}
+			/**
+			 * @return {undefined}
+			 */
+			function updateGraphState() {
+				localStorageService.set("graphEnabled", graphsEnabledState.supportEnabled ? "true" : "false");
+			}
+
+
 			/** @type {string} */
 			var url = "/command";
 			var extruderState = {
 				supportEnabled: "true" == localStorageService.get("secondExtruderSupportEnabled")
+			}; var graphEnabledState = {
+				supportEnabled: "true" == localStorageService.get("graphEnabled")
 			};
 			/** @type {!Array} */
 			var output = [];
@@ -2047,7 +2081,9 @@ Build date: 2016-06-28
 				registerOutput: registerOutput,
 				broadcastCommand: broadcastCommand,
 				secondExtruderState: secondExtruderState,
-				updateSecondExtruder: updateSecondExtruder
+				updateSecondExtruder: updateSecondExtruder,
+				graphEnabledState: graphsEnabledState,
+				updateGraphState: updateGraphState
 			};
 			return service;
 		}
